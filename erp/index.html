@@ -52,7 +52,7 @@ table{box-shadow:0 4px 18px rgba(20,40,90,.09);border-radius:18px;overflow:hidde
 @media screen{#app{margin-right:84px}body{padding-bottom:calc(40px + env(safe-area-inset-bottom,0px))}#tb{left:auto;right:0;top:0;bottom:0;width:84px;flex-direction:column;justify-content:flex-start;gap:6px;border-radius:0;border:0;border-left:1px solid var(--sep);box-shadow:-6px 0 24px rgba(20,40,90,.12);padding:calc(14px + env(safe-area-inset-top,0px)) 6px 14px;overflow-y:auto}#tb button{flex:none;width:100%;min-height:80px;border-radius:20px;font-size:14px}#tb button span{font-size:28px}#tb .on{background:var(--bt);color:var(--bl);box-shadow:inset 0 0 0 2px rgba(10,132,255,.25)}#fab{bottom:calc(24px + env(safe-area-inset-bottom,0px));left:16px}}
 @media screen and (max-width:480px){#app{margin-right:76px}#tb{width:76px}.k b{font-size:24px}.g2{gap:8px;margin:12px 10px}.card{margin-left:10px;margin-right:10px}.row{margin-left:10px;margin-right:10px}input,select,textarea{font-size:18px;padding:10px 8px}.bdg{margin-left:10px;margin-right:10px;font-size:17px}.tw{margin-left:10px;margin-right:10px}}
 .nosc,.nosc body{overflow:hidden}
-@media screen and (max-width:600px){#app{margin-right:0}body{padding-bottom:calc(170px + env(safe-area-inset-bottom,0px))}#tb{left:10px;right:10px;top:auto;bottom:calc(10px + env(safe-area-inset-bottom,0px));width:auto;flex-direction:row;justify-content:flex-start;gap:2px;border-radius:26px;border:1px solid var(--sep);box-shadow:0 10px 32px rgba(0,0,0,.25);padding:4px;overflow-y:visible}#tb button{flex:1;width:auto;min-height:58px;border-radius:20px;font-size:11.5px;padding:6px 0}#tb button span{font-size:22px}#fab{bottom:calc(88px + env(safe-area-inset-bottom,0px));left:14px}}
+@media screen and (max-width:600px){#app{margin-right:0}body{padding-bottom:calc(170px + env(safe-area-inset-bottom,0px))}#tb{left:10px;right:10px;top:auto;bottom:calc(10px + env(safe-area-inset-bottom,0px));width:auto;flex-direction:row;justify-content:flex-start;gap:2px;border-radius:26px;border:1px solid var(--sep);box-shadow:0 10px 32px rgba(0,0,0,.25);padding:4px;overflow-y:visible;overflow-x:auto}#tb button{flex:0 0 60px;width:auto;min-height:58px;border-radius:20px;font-size:11.5px;padding:6px 0}#tb button span{font-size:22px}#fab{bottom:calc(88px + env(safe-area-inset-bottom,0px));left:14px}}
 
 /* ERP additions */
 .g2 .card small::before{content:none!important}
@@ -78,6 +78,10 @@ table{box-shadow:0 4px 18px rgba(20,40,90,.09);border-radius:18px;overflow:hidde
 @media screen and (max-width:600px){.cf{width:100%;height:calc(100% - 84px - env(safe-area-inset-bottom,0px))}}
 @media print{.pg{position:static;overflow:visible}}
 
+@media screen and (min-width:900px){#app{margin-right:232px}#tb{width:232px;gap:4px;padding:calc(14px + env(safe-area-inset-top,0px)) 12px 14px}#tb .tbr{display:block;padding:10px 14px 16px;font-size:26px;font-weight:800}#tb button{display:flex;flex-direction:row;align-items:center;gap:14px;min-height:54px;padding:10px 18px;font-size:17.5px;font-weight:700;text-align:right}#tb button span{display:inline;font-size:24px}#tb .on{background:var(--bt);color:var(--bl)}.g2{grid-template-columns:repeat(auto-fill,minmax(240px,1fr))}}
+@media screen and (max-width:899px){#tb .tbr{display:none}}
+.subb{display:flex;align-items:center;gap:12px;margin:12px 16px 0}.subb button{background:var(--cd);color:var(--bl);min-height:40px;padding:6px 16px;font-size:16px;margin:0;width:auto}.subb b{font-size:20px}
+.bigch{text-align:center;cursor:pointer;padding:26px 16px}.bigch h3{margin:10px 0 4px}
 </style><link rel="manifest" href="manifest.webmanifest"><meta name="theme-color" content="#0A57D6"><link rel="apple-touch-icon" href="../apple-touch-icon.png?v=2"><meta name="apple-mobile-web-app-title" content="M STORE ERP"></head><body><div id="app"><div class="spl"><div class="spb">💵</div><div class="br"><span class="mo">M</span> <span class="go">STORE</span></div><div class="stg">نظام إدارة المحل</div></div></div>
 <script>setTimeout(function(){var s=document.querySelector(".spl");if(s)s.remove()},2000);window.addEventListener("error",function(){var s=document.querySelector(".spl");if(s&&document.querySelectorAll("#app .card,#app .pg,#app .hb").length)s.remove()});</script>
 <script>
@@ -160,13 +164,22 @@ save();document.querySelectorAll('.pg').forEach(x=>x.remove());R();toast('اتض
 
 /* ---------- main render ---------- */
 function R(){killSpl();if(!sess)return loginV();applyBrand();
-const T={h:'الرئيسية',s:'المبيعات',c:'الكاش',p:'المنتجات',b:'المشتريات',g:'الجرد',m:'المزيد'};
-const TB=[['h','🏠'],['s','🧾'],['c','💵'],['p','📦'],['b','🛒'],['g','🧮'],['m','⚙️']];
-const FB={s:'nS()',p:'nP()',b:'nB()',c:'cSh()'};
-$('#app').innerHTML=`<div class="hb"><div class="br">${brH()}</div><div class="sub">${escQ(S.branch)} · ${sess.u.n} · ${sess.u.role=='owner'?'مالك':'كاشير'}</div></div><div id="mn">${V[tab]()}</div>${FB[tab]?`<button id="fab" onclick="${FB[tab]}">+</button>`:''}<div id="tb">${TB.map(([k,i])=>`<button class="${tab==k?'on':''}" onclick="tab='${k}';R()"><span>${i}</span>${T[k]}</button>`).join('')}</div>`;
+const T={h:'الرئيسية',s:'المبيعات',b:'المشتريات',k:'المخزون',c:'الكاش',a:'الحسابات',t:'الصيانة',u:'العملاء',e:'الإعدادات'};
+const TB=[['h','🏠'],['s','🧾'],['b','🛒'],['k','📦'],['c','💵'],['a','🧮'],['t','🔧'],['u','👥'],['e','⚙️']];
+const fb=tab=='s'?'nS()':tab=='b'?'nB()':tab=='k'&&kSub=='p'?'nP()':tab=='c'&&CS&&(!cSub||cSub=='h'||cSub=='o')?'cSh()':'';
+$('#app').innerHTML=`<div class="hb"><div class="br">${brH()}</div><div class="sub">${escQ(S.branch)} · ${sess.u.n} · ${sess.u.role=='owner'?'مالك':'كاشير'}</div></div><div id="mn">${V[tab]()}</div>${fb?`<button id="fab" onclick="${fb}">+</button>`:''}<div id="tb"><div class="tbr">${brH()}</div>${TB.map(([k,i])=>`<button class="${tab==k?'on':''}" onclick="tab='${k}';R()"><span>${i}</span>${T[k]}</button>`).join('')}</div>`;
 if(SK&&!CS)cBoot()}
 
 const V={};
+let kSub='',cSub='';
+function subBar(t1,t2){return`<div class="subb"><button onclick="kSub='';R()">‹ ${t1}</button><b>${t2}</b></div>`}
+V.k=function(){
+if(kSub=='p')return subBar('المخزون','المنتجات')+V.p();
+if(kSub=='g')return subBar('المخزون','الجرد')+V.g();
+return`<div class="g2" style="margin-top:14px">
+<div class="card bigch" onclick="kSub='p';R()"><div style="font-size:36px">📦</div><h3>المنتجات</h3><small class="h">${S.prods.length} صنف · قيمة المخزون ${f2(stockVal())} ج</small></div>
+<div class="card bigch" onclick="kSub='g';R()"><div style="font-size:36px">🧮</div><h3>الجرد</h3><small class="h">رفع جرد · عدّ يدوي · تصفير الكميات</small></div>
+</div>`};
 V.h=function(){const t=td(),s0=dayS(t),st=s0.reduce((s,x)=>s+x.tot,0),pt=S.purs.filter(x=>x.dt==t).reduce((s,x)=>s+x.tot,0),mc=S.maint.filter(x=>x.st=='جاري').length;
 const act=[...S.sales.map(x=>({t:'بيع',d:`فاتورة #${x.no} · ${x.cn}`,a:x.tot,tm:x.tm,c:'t'})),...S.purs.map(x=>({t:'شراء',d:`أمر شراء #${x.no} · ${x.sn}`,a:x.tot,tm:x.tm||0,c:'w'})),...S.maint.map(x=>({t:'صيانة',d:`${x.dev} · ${x.cust}`,a:x.fee,tm:0,c:''}))].sort((a,b)=>b.tm-a.tm).slice(0,6);
 return`<div class="demo">🧪 نسخة تجريبية للتصميم — البيانات دي للعرض بس</div>
@@ -223,9 +236,7 @@ if(p){p.stock=q;upd++}
 else{if(!S.cats.includes('أخرى'))S.cats.push('أخرى');S.prods.push({id:S.seq.pr++,sku:nextSku('أخرى'),n:nm,cat:'أخرى',cost:0,price:0,stock:q});made++}}
 save();R();$('#upr').innerHTML=`<div class="bdg">اتحدّث ${upd} صنف · اتسجل ${made} صنف جديد${bad?' · '+bad+' سطر مش مفهوم':''}</div>`}
 
-V.m=function(){const ow=sess.u.role=='owner';
-return`${[['👥','العملاء والموردين','أرصدة الآجل والكشوفات','pgC()'],['🔧','الصيانة','تيكيتات الإصلاح وقطع الغيار','pgM()'],['🧮','الحسابات','ملخص مالي كامل','pgA()'],...(ow?[['👤','المستخدمين','الصلاحيات والحسابات','pgU()']]:[]),['⚙️','الإعدادات','هوية المحل والفرع','pgSet()']].map(([i,t,s2,f])=>`<div class="row" onclick="${f}"><span style="font-size:26px">${i}</span><div class="m"><b>${t}</b><small class="h">${s2}</small></div><span style="color:var(--t2)">‹</span></div>`).join('')}
-<div class="card"><button class="pri dng" style="margin:0" onclick="logout()">تسجيل خروج</button></div>`};
+;
 
 /* ---------- sales invoice ---------- */
 function nS(){window._d={items:[],pay:'كاش'};
@@ -330,31 +341,31 @@ save();ovx();toast('اتحفظ أمر الشراء #'+(S.seq.p-1)+' ✅');R()}
 
 /* ---------- customers & suppliers ---------- */
 let csT='c';
-function pgC(){const L=csT=='c'?S.custs:S.sups,t=csT=='c'?'عميل':'مورد';
-pg('العملاء والموردين',`<div style="margin:12px 16px 0"><div class="seg"><button class="${csT=='c'?'on':''}" onclick="csT='c';document.querySelectorAll('.pg').forEach(x=>x.remove());pgC()">العملاء</button><button class="${csT=='s'?'on':''}" onclick="csT='s';document.querySelectorAll('.pg').forEach(x=>x.remove());pgC()">الموردين</button></div></div>
+V.u=function(){const L=csT=='c'?S.custs:S.sups,t=csT=='c'?'عميل':'مورد';
+return`<div style="margin:12px 16px 0"><div class="seg"><button class="${csT=='c'?'on':''}" onclick="csT='c';R()">العملاء</button><button class="${csT=='s'?'on':''}" onclick="csT='s';R()">الموردين</button></div></div>
 <div class="bdg">${csT=='c'?'إجمالي مستحق على العملاء':'إجمالي مستحق للموردين'}: ${f2(sumBal(L))} ج</div>
 ${L.map(x=>`<div class="row"><div class="m"><b>${escQ(x.n)}</b><small class="h">${x.ph||''}</small></div><div style="text-align:center"><b class="${x.bal>0?'neg':''}">${f2(x.bal)}</b><small class="h">${x.bal>0?(csT=='c'?'عليه':'له'):'صفر'}</small></div></div>`).join('')}
-<div class="card"><h3>إضافة ${t}</h3><label>الاسم</label><input id="cn2"><label>الموبايل</label><input id="cph" inputmode="tel"><button class="pri" onclick="svC('${csT}')">حفظ</button></div>`)}
+<div class="card"><h3>إضافة ${t}</h3><label>الاسم</label><input id="cn2"><label>الموبايل</label><input id="cph" inputmode="tel"><button class="pri" onclick="svC('${csT}')">حفظ</button></div>`}
 function svC(t){const n=$('#cn2').value.trim();if(n.length<2)return toast('اكتب الاسم');
 (t=='c'?S.custs:S.sups).push({id:t=='c'?S.seq.c++:S.seq.sp++,n,ph:$('#cph').value.trim(),bal:0});
-save();document.querySelectorAll('.pg').forEach(x=>x.remove());pgC();toast('اتحفظ ✅')}
+save();R();toast('اتحفظ ✅')}
 
 /* ---------- maintenance ---------- */
-function pgM(){pg('الصيانة',`<div class="bdg">تيكيتات جارية: ${S.maint.filter(x=>x.st=='جاري').length}</div>
+V.t=function(){return`<div class="bdg">تيكيتات جارية: ${S.maint.filter(x=>x.st=='جاري').length}</div>
 ${S.maint.slice().sort((a,b)=>b.no-a.no).map(m=>{const pt=m.pid?pName(m.pid):'بدون قطعة';return`<div class="row"><div class="m"><b>${escQ(m.dev)} · ${escQ(m.cust)}</b><small class="h">${m.prob} · ${pt} · أجرة ${f2(m.fee)}</small></div><div style="text-align:center"><span class="stt ${m.st=='جاري'?'y':'g'}">${m.st}</span>${m.st!='مستلم'?`<br><button style="margin-top:6px;min-height:36px;padding:4px 14px;font-size:15px" onclick="adM(${m.id})">${m.st=='جاري'?'تم الإصلاح':'تسليم'}</button>`:''}</div></div>`}).join('')}
 <div class="card"><h3>تيكيت جديد</h3><label>اسم العميل</label><input id="mc"><label>الجهاز</label><input id="md" placeholder="مثال: iPhone 12"><label>العطل</label><input id="mp2">
 <label>قطعة الغيار (بتتخصم من المخزون)</label><select id="mpt"><option value="0">بدون قطعة</option>${S.prods.filter(p=>p.stock>0).map(p=>`<option value="${p.id}">${escQ(p.n)} · متاح ${p.stock}</option>`).join('')}</select>
 <label>أجرة الإصلاح</label><input id="mf" type="number" inputmode="decimal" value="0">
-<div class="er" id="me2"></div><button class="pri" onclick="svM()">حفظ التيكيت</button></div>`)}
+<div class="er" id="me2"></div><button class="pri" onclick="svM()">حفظ التيكيت</button></div>`}
 function svM(){const c=$('#mc').value.trim(),dv=$('#md').value.trim();if(c.length<2||dv.length<2)return $('#me2').textContent='اكتب اسم العميل والجهاز';
 const pid=+$('#mpt').value||null;if(pid){const p=S.prods.find(x=>x.id==pid);if(p.stock<1)return $('#me2').textContent='القطعة مش متاحة في المخزون';p.stock--}
 S.maint.push({id:Date.now(),no:S.seq.m++,dt:td(),cust:c,dev:dv,prob:$('#mp2').value.trim(),pid,fee:+$('#mf').value||0,st:'جاري'});
-save();document.querySelectorAll('.pg').forEach(x=>x.remove());pgM();toast('اتحفظ التيكيت ✅')}
-function adM(id){const m=S.maint.find(x=>x.id==id);if(!m)return;m.st=m.st=='جاري'?'تم':'مستلم';save();document.querySelectorAll('.pg').forEach(x=>x.remove());pgM()}
+save();R();toast('اتحفظ التيكيت ✅')}
+function adM(id){const m=S.maint.find(x=>x.id==id);if(!m)return;m.st=m.st=='جاري'?'تم':'مستلم';save();R()}
 
 /* ---------- accounts ---------- */
-function pgA(){const st=S.sales.reduce((s,x)=>s+x.tot,0),sc=S.sales.reduce((s,x)=>s+costOf(x),0),pt=S.purs.reduce((s,x)=>s+x.tot,0),mf=S.maint.filter(m=>m.st!='ملغي').reduce((s,m)=>s+m.fee,0);
-pg('الحسابات',`<div class="g2">
+V.a=function(){const st=S.sales.reduce((s,x)=>s+x.tot,0),sc=S.sales.reduce((s,x)=>s+costOf(x),0),pt=S.purs.reduce((s,x)=>s+x.tot,0),mf=S.maint.filter(m=>m.st!='ملغي').reduce((s,m)=>s+m.fee,0);
+return`<div class="g2" style="margin-top:14px">
 <div class="card k"><small>🧾 إجمالي المبيعات</small><b>${f2(st)}</b></div>
 <div class="card k"><small>💵 أجور صيانة</small><b>${f2(mf)}</b></div>
 <div class="card k"><small>📉 تكلفة البضاعة المباعة</small><b>${f2(sc)}</b></div>
@@ -364,33 +375,34 @@ pg('الحسابات',`<div class="g2">
 <div class="card k"><small>📒 مستحق على العملاء</small><b>${f2(sumBal(S.custs))}</b></div>
 <div class="card k"><small>🏭 مستحق للموردين</small><b>${f2(sumBal(S.sups))}</b></div>
 </div>
-<small class="h" style="margin:0 16px;display:block;text-align:center">من غير ضرايب (VAT) دلوقتي — حسب إعدادات المرحلة الأولى</small>`)}
+<small class="h" style="margin:0 16px;display:block;text-align:center">من غير ضرايب (VAT) دلوقتي — حسب إعدادات المرحلة الأولى</small>`}
 
 /* ---------- users ---------- */
-function pgU(){if(sess.u.role!='owner')return;
-pg('المستخدمين',`${S.users.map((x,i)=>`<div class="row"><div class="m"><b>${escQ(x.n)}</b><small class="h">${x.u} · ${x.role=='owner'?'مالك':'كاشير'}${x.off?' · موقوف':''}</small></div>${i?`<button onclick="tgU2(${i})">${x.off?'تفعيل':'إيقاف'}</button>`:''}</div>`).join('')}
-<div class="card"><h3>مستخدم جديد</h3><label>الاسم</label><input id="un"><label>اسم المستخدم (للدخول)</label><input id="uu" style="direction:ltr"><label>كلمة السر</label><input id="up" type="password" inputmode="numeric">
-<label>الصلاحية</label><div class="seg" id="ur"><button class="on" data-r="cashier">كاشير</button><button data-r="owner">مالك</button></div>
-<div class="er" id="ue"></div><button class="pri" onclick="svU()">إضافة المستخدم</button></div>`);
-$('#ur').onclick=e=>{if(e.target.dataset.r)[...$('#ur').children].forEach(b=>b.classList.toggle('on',b==e.target))}}
+let uRole='cashier';
+function uR(r){uRole=r;[...$('#ur').children].forEach(b=>b.classList.toggle('on',b.dataset.r==r))}
 async function svU(){const n=$('#un').value.trim(),u=$('#uu').value.trim().toLowerCase(),p=$('#up').value;
 if(n.length<2||u.length<2||p.length<4)return $('#ue').textContent='اكتب الاسم واسم المستخدم وكلمة سر 4 خانات على الأقل';
 if(S.users.some(x=>x.u==u))return $('#ue').textContent='اسم المستخدم ده موجود';
-const role=[...$('#ur').children].find(b=>b.classList.contains('on')).dataset.r;
-S.users.push({u,n,h:await H(p),role});save();document.querySelectorAll('.pg').forEach(x=>x.remove());pgU();toast('اتحفظ ✅')}
-function tgU2(i){S.users[i].off=!S.users[i].off;save();document.querySelectorAll('.pg').forEach(x=>x.remove());pgU()}
+S.users.push({u,n,h:await H(p),role:uRole});uRole='cashier';save();R();toast('اتحفظ ✅')}
+function tgU2(i){S.users[i].off=!S.users[i].off;save();R()}
 
 /* ---------- settings ---------- */
-function pgSet(){const b=BR();
-pg('الإعدادات',`<div class="card"><h3>🏪 الفرع</h3><label>اسم الفرع</label><input id="brn2" value="${escQ(S.branch)}"><small class="h">النظام متصمم يدعم فروع متعددة لاحقاً</small></div>
+V.e=function(){const b=BR();const ow=sess.u.role=='owner';
+return`<div class="card" style="margin-top:12px"><h3>🏪 الفرع</h3><label>اسم الفرع</label><input id="brn2" value="${escQ(S.branch)}"><small class="h">النظام متصمم يدعم فروع متعددة لاحقاً</small></div>
 <div class="card"><h3>🎨 هوية التطبيق</h3><label>اسم المحل</label><input id="brn" value="${escQ(b.n)}"><label>الأيقونة</label><input id="bric" value="${escQ(b.ic)}" maxlength="4"><label>الوصف</label><input id="brtg" value="${escQ(b.tg)}"><label>اللون</label><input id="brcl" type="color" value="${b.cl}" style="height:56px;padding:4px"><button class="pri" onclick="brSave()">حفظ الهوية</button></div>
-${sess.u.role=='owner'?`<div class="card"><h3>💵 اعدادات الكاش</h3>${CS?`<small class="h">التعديل هنا بينطبق على كل الأجهزة (تطبيق الكاش والـ ERP) - نفس البيانات بالظبط</small>
+${ow?`<div class="card"><h3>💵 اعدادات الكاش</h3>${CS?`<small class="h">التعديل هنا بينطبق على كل الأجهزة (تطبيق الكاش والـ ERP) - نفس البيانات بالظبط</small>
 <label>أرصدة البداية (أول مرة): الدرج | فودافون | انستا</label><div style="display:grid;grid-template-columns:repeat(3,1fr);gap:6px">${['d','v','i'].map(k2=>`<input type="number" value="${CS.base[k2]}" onchange="CS.base.${k2}=+this.value||0;cSv();toast('اتحفظ ✅')">`).join('')}</div>
 <label>جدول العمولات: من | إلى | سحب | تحويل</label>${CS.tiers.map((t2,j)=>`<div style="display:grid;grid-template-columns:repeat(4,1fr);gap:6px;margin:6px 0">${t2.map((v2,k2)=>`<input type="number" value="${v2}" onchange="CS.tiers[${j}][${k2}]=+this.value;cSv()">`).join('')}</div>`).join('')}
 <label>بعد آخر شريحة: كل (جنيه) | عمولة سحب | عمولة تحويل</label><div style="display:grid;grid-template-columns:repeat(3,1fr);gap:6px">${['s','w','t'].map(k2=>`<input type="number" value="${CS.block[k2]}" onchange="CS.block.${k2}=+this.value;cSv()">`).join('')}</div>
 <small class="h" style="display:block;margin-top:8px">مستخدمين تطبيق الكاش بيتظبطوا من تطبيق الكاش نفسه.</small>`:'<small class="h">اربط الكاش من تاب الكاش الأول عشان تظهر الإعدادات هنا.</small>'}</div>`:''}
-<div class="card"><h3>🧪 بيانات تجريبية</h3><small class="h">النسخة دي للتصميم والتجربة بس — البيانات على الجهاز ده ومش متزامنة</small><button class="pri dng" onclick="ask('مسح البيانات التجريبية؟','هترجع البيانات الافتراضية من الأول','مسح وإعادة',async()=>{localStorage.removeItem(K);S=await defS();save();R();toast('اتعملت إعادة الضبط')})">إعادة ضبط البيانات</button></div>`)}
-function brSave(){S.branch=$('#brn2').value.trim()||'الفرع الرئيسي';S.brand={n:$('#brn').value.trim()||'M STORE',ic:$('#bric').value.trim()||'💵',tg:$('#brtg').value.trim(),cl:$('#brcl').value||'#0A57D6'};save();document.querySelectorAll('.pg').forEach(x=>x.remove());R();toast('اتحفظت الهوية ✅')}
+${ow?`<h3 style="margin:14px 16px 0">👤 المستخدمين</h3>
+${S.users.map((x,i)=>`<div class="row"><div class="m"><b>${escQ(x.n)}</b><small class="h">${x.u} · ${x.role=='owner'?'مالك':'كاشير'}${x.off?' · موقوف':''}</small></div>${i?`<button style="width:auto;min-height:44px;padding:6px 18px" onclick="tgU2(${i})">${x.off?'تفعيل':'إيقاف'}</button>`:''}</div>`).join('')}
+<div class="card"><h3>مستخدم جديد</h3><label>الاسم</label><input id="un"><label>اسم المستخدم (للدخول)</label><input id="uu" style="direction:ltr"><label>كلمة السر</label><input id="up" type="password" inputmode="numeric">
+<label>الصلاحية</label><div class="seg" id="ur"><button class="on" data-r="cashier" onclick="uR('cashier')">كاشير</button><button data-r="owner" onclick="uR('owner')">مالك</button></div>
+<div class="er" id="ue"></div><button class="pri" onclick="svU()">إضافة المستخدم</button></div>`:''}
+<div class="card"><h3>🧪 بيانات تجريبية</h3><small class="h">النسخة دي للتصميم والتجربة بس — البيانات على الجهاز ده ومش متزامنة</small><button class="pri dng" onclick="ask('مسح البيانات التجريبية؟','هترجع البيانات الافتراضية من الأول','مسح وإعادة',async()=>{localStorage.removeItem(K);S=await defS();save();R();toast('اتعملت إعادة الضبط')})">إعادة ضبط البيانات</button></div>
+<div class="card"><button class="pri dng" style="margin:0" onclick="logout()">تسجيل خروج</button></div>`}
+function brSave(){S.branch=$('#brn2').value.trim()||'الفرع الرئيسي';S.brand={n:$('#brn').value.trim()||'M STORE',ic:$('#bric').value.trim()||'💵',tg:$('#brtg').value.trim(),cl:$('#brcl').value||'#0A57D6'};save();R();toast('اتحفظت الهوية ✅')}
 
 /* ---------- الكاش (نفس بيانات تطبيق الكاش المستقل - نفس الـ Supabase blob) ---------- */
 const SB={url:'https://jkzdylpxbmpsypbxugau.supabase.co',key:'sb_publishable_p3KXuvsg7Nz75GXqt9iqCg_pEudnSgs'};
