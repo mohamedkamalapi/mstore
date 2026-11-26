@@ -611,11 +611,13 @@ let SK=localStorage.getItem('ms-key')||'',CS=null,cDirty=0,cTS='',cTimer=0,cLd=0
 const cN=n=>`<span class="${n<0?'neg':''}">${f2(n)}</span>`;
 const cRO=()=>!!(sess&&sess.u&&sess.u.role=='owner'&&CS&&CS.cur);
 const chdr=()=>({'apikey':SB.key,'Authorization':'Bearer '+SB.key,'Content-Type':'application/json','x-ms-key':SK});
-async function cGet(){const r=await fetch(SB.url+'/rest/v1/mstore_state?id=eq.state&select=data,updated_at',{headers:chdr()});if(!r.ok)return null;const j=await r.json();return j[0]||null}
-async function cSbCheck(){try{const r=await fetch(SB.url+'/rest/v1/mstore_settings?select=id',{headers:chdr()});if(!r.ok)return false;const j=await r.json();return j.length>0}catch(e){return false}}
-async function cPush(){if(!SK||!CS)return;const ts=new Date().toISOString();let res='net';
-try{const r=await fetch(SB.url+'/rest/v1/rpc/mstore_push',{method:'POST',headers:chdr(),body:JSON.stringify({p_data:JSON.parse(JSON.stringify(CS)),p_role:sess?sess.u.role:'owner',p_base:cTS||null,p_ts:ts})});res=r.ok?await r.json():'net'}catch(e){}
-if(res=='ok'){cTS=ts;cDirty=0}else if(res=='merged'){cDirty=0;cPull()}else if(res=='stale'){cDirty=0;cPull();alert('جهاز تاني عدّل البيانات - اتعملت مزامنة')}else{cTimer=setTimeout(cPush,5000)}}
+const cCred=()=>{try{const q=JSON.parse(localStorage.getItem('ms-sess')||'null');return q&&q.u&&q.h?{p_u:q.u,p_h:q.h}:null}catch(e){return null}};
+async function cRpc(n,b){const r=await fetch(SB.url+'/rest/v1/rpc/'+n,{method:'POST',headers:chdr(),body:JSON.stringify(b)});if(!r.ok)throw 0;return await r.json()}
+async function cGet(){const c=cCred();if(!c)return null;const r=await cRpc('mstore_get',c);if(r.s!='ok')return null;return{data:r.data,updated_at:r.ts}}
+async function cSbCheck(){try{return(await cRpc('mstore_check',{}))===true}catch(e){return false}}
+async function cPush(){if(!SK||!CS)return;const c=cCred();if(!c)return;let res='net',ts='';
+try{const r=await cRpc('mstore_save',{...c,p_data:JSON.parse(JSON.stringify(CS)),p_base:cTS||null});res=r.s;ts=r.ts||''}catch(e){}
+if(res=='ok'){cTS=ts;cDirty=0}else if(res=='merged'){cDirty=0;cPull()}else if(res=='stale'){cDirty=0;cPull();alert('جهاز تاني عدّل البيانات - اتعملت مزامنة')}else if(res=='bad'||res=='auth'){cDirty=0;cPull();alert('مش مسموح لحسابك - سجّل دخولك في تطبيق الكاش الأول')}else{cTimer=setTimeout(cPush,5000)}}
 async function cPull(){if(!SK||cDirty||!CS)return;try{const g=await cGet();if(g&&g.updated_at>cTS){CS=g.data;cNorm();cTS=g.updated_at;if(sess&&!document.getElementById('ov')&&!document.querySelector('.pg')&&(tab=='c'||tab=='h')&&!(document.activeElement&&document.activeElement.tagName=='INPUT'))R()}}catch(e){}}
 function cSv(){cDirty=1;clearTimeout(cTimer);cTimer=setTimeout(cPush,700)}
 function cNorm(){const d={users:[],tiers:[[1,499,5,5],[500,899,10,10],[900,1000,15,10]],block:{s:1000,w:15,t:10},base:{d:0,v:0,i:0},ops:[],counts:{},shifts:[],cur:null,names:[],liq:[],open:{}};for(const k in d)if(CS[k]==null)CS[k]=d[k]}
