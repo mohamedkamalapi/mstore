@@ -20,7 +20,7 @@ button{font:inherit;font-weight:600;font-size:19px;border:0;border-radius:16px;p
 #tb{position:fixed;bottom:0;left:0;right:0;display:flex;background:var(--nav);backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);border-top:1px solid var(--sep);padding-bottom:env(safe-area-inset-bottom,0px);z-index:5}
 #tb button{flex:1;background:none;color:var(--t2);border-radius:0;font-size:13.5px;padding:8px 2px;min-height:60px;line-height:1.3}#tb button span{display:block;font-size:24px}#tb .on{color:var(--bl)}
 #fab{position:fixed;left:20px;bottom:calc(80px + env(safe-area-inset-bottom,0px));width:66px;height:66px;border-radius:50%;background:var(--bl);color:#fff;font-size:38px;padding:0;box-shadow:0 4px 14px #0004;z-index:6}
-.ov{position:fixed;inset:0;background:#0007;z-index:10;display:flex;align-items:flex-end}.sheet{background:var(--bg);width:100%;max-height:94%;overflow:auto;border-radius:24px 24px 0 0;padding:12px 18px calc(24px + env(safe-area-inset-bottom,0px))}.grab{width:44px;height:5px;background:var(--sep);border-radius:3px;margin:0 auto 10px}
+.ov{position:fixed;inset:0;background:#0007;z-index:10;display:flex;align-items:flex-end}.toast{position:fixed;top:calc(18px + env(safe-area-inset-top,0px));left:50%;transform:translateX(-50%);background:var(--card);color:var(--tx);padding:12px 24px;border-radius:30px;box-shadow:0 8px 26px rgba(0,0,0,.2);z-index:40;font-weight:700;font-size:18px;opacity:0;transition:opacity .3s,transform .3s;pointer-events:none;white-space:nowrap}.sheet{background:var(--bg);width:100%;max-height:94%;overflow:auto;border-radius:24px 24px 0 0;padding:12px 18px calc(24px + env(safe-area-inset-bottom,0px))}.grab{width:44px;height:5px;background:var(--sep);border-radius:3px;margin:0 auto 10px}
 .spl{position:fixed;inset:0;background:var(--bl);color:#fff;z-index:30;display:flex;flex-direction:column;align-items:center;justify-content:center;font-size:20px}.spl .br{font-size:64px}
 .pg{position:fixed;inset:0;z-index:8;background:linear-gradient(180deg,var(--bt) 0,var(--bg) 340px) no-repeat var(--bg);overflow-y:auto;-webkit-overflow-scrolling:touch}
 .tw{overflow-x:auto;margin:12px 16px}table{border-collapse:collapse;width:100%;font-size:16px;background:var(--card);border-radius:14px}th,td{padding:10px 8px;border-bottom:1px solid var(--sep);text-align:center;white-space:nowrap}th{color:var(--t2)}
@@ -58,6 +58,7 @@ const DEN=[200,100,50,20,10,5,1],$=s=>document.querySelector(s);
 document.documentElement.dataset.theme=localStorage.getItem('ms-theme')||'';
 const lock=on=>document.documentElement.classList.toggle('nosc',!!on);
 function ovx(){const o=$('#ov');if(o)o.remove();lock(0)}
+function toast(m){let t=document.getElementById('tst');if(!t){t=document.createElement('div');t.id='tst';t.className='toast';document.body.appendChild(t)}t.textContent=m;clearTimeout(t._h);requestAnimationFrame(()=>{t.style.opacity=1;t.style.transform='translateX(-50%) translateY(8px)'});t._h=setTimeout(()=>{t.style.opacity=0;t.style.transform='translateX(-50%)'},2800)}
 const td=()=>{const d=new Date();return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0')};
 const f2=n=>(+n||0).toLocaleString('en-US',{minimumFractionDigits:2,maximumFractionDigits:2});
 const tm=t=>new Date(t).toLocaleTimeString('en-GB',{hour:'2-digit',minute:'2-digit',hour12:true});
@@ -97,7 +98,9 @@ const local=await DB.get();
 if(SK){let g=null;try{g=await sbGet()}catch(e){}
 if(g){S=g.data;remoteTS=g.updated_at;DB.set(JSON.parse(JSON.stringify(S)))}else if(local){S=local}else{err='مفيش نت، ومفيش نسخة على الجهاز ده - جرب تاني وانت متصل';SK='';localStorage.removeItem('ms-key');return pairV()}
 applyBrand();
+const wlcm0=()=>{const sp=document.querySelector('.spl');if(sess&&sp)sp.innerHTML='<div class="br">'+brH()+'</div><div>'+escQ(BR().tg)+'</div><div style="margin-top:16px;font-size:24px;font-weight:700">أهلاً بيك يا '+escQ(sess.u.n)+' 👋</div>'};
 const sv0=localStorage.getItem('ms-sess');if(sv0){try{const q=JSON.parse(sv0),us=S.users.find(x=>x.u==q.u);if(us&&!us.off&&us.h==q.h)sess={u:us,ow:q.ow};else localStorage.removeItem('ms-sess')}catch(e){localStorage.removeItem('ms-sess')}}
+wlcm0();
 setTimeout(R,900);return}
 pairV()}
 function comm(t,A){if(!(A>0))return null;const k=t=='w'?2:3,T=S.tiers,mx=Math.max(...T.map(x=>x[1])),f=r=>{const x=T.find(x=>r>=x[0]&&r<=x[1]);return x?+x[k]:null};
@@ -113,9 +116,9 @@ function saveSess(){if(sess)localStorage.setItem('ms-sess',JSON.stringify({u:ses
 function logout(){const d=document.createElement('div');d.className='ov';d.id='ov';d.innerHTML=`<div class="sheet"><div class="grab"></div><h2 style="text-align:center;margin-top:2px">تأكيد تسجيل الخروج؟</h2><small class="h" style="text-align:center;display:block;margin:6px 0 4px">هتحتاج تسجّل دخولك تاني عشان ترجع للتطبيق</small><button class="pri dng" onclick="logout2()">تسجيل خروج</button><button class="pri" style="margin-top:8px" onclick="ovx()">إلغاء</button></div>`;document.body.appendChild(d);lock(1);d.onclick=e=>{if(e.target==d)ovx()}}
 function logout2(){sess=null;localStorage.removeItem('ms-sess');ovx();R()}
 async function login(){const u=$('#u').value.trim().toLowerCase().replace(/\s+/g,' '),p=$('#p').value,n=$('#n').value.trim(),us=S.users.find(x=>x.u==u);
-if(Date.now()<lk){err='استنى '+Math.ceil((lk-Date.now())/1000)+' ثانية وحاول تاني';return loginV()}if(!us||us.off||us.h!=await H(p)){if(++fl>=5){fl=0;lk=Date.now()+30000}err='اسم المستخدم أو كلمة السر غلط';return loginV()}fl=0;if(us.role=='owner'){err='';sess={u:us,ow:null};saveSess();R();return}if(n.length<2){err='اكتب اسم صاحب الوردية (حرفين على الأقل)';return loginV()}
+if(Date.now()<lk){err='استنى '+Math.ceil((lk-Date.now())/1000)+' ثانية وحاول تاني';return loginV()}if(!us||us.off||us.h!=await H(p)){if(++fl>=5){fl=0;lk=Date.now()+30000}err='اسم المستخدم أو كلمة السر غلط';return loginV()}fl=0;if(us.role=='owner'){err='';sess={u:us,ow:null};saveSess();R();toast('أهلاً بيك يا '+us.n+' 👋');return}if(n.length<2){err='اكتب اسم صاحب الوردية (حرفين على الأقل)';return loginV()}
 err='';sess={u:us,ow:n};saveSess();if(!S.names.includes(n))S.names.push(n);const c=S.cur;
-if(c&&c.date==td()){if(c.owner!=n&&!confirm(`الوردية #${c.no} مفتوحة باسم ${c.owner}.\nموافق = كمّل عليها، إلغاء = سلّم وافتح وردية جديدة باسم ${n}`))oSh(n)}else oSh(n);sv();R()}
+if(c&&c.date==td()){if(c.owner!=n&&!confirm(`الوردية #${c.no} مفتوحة باسم ${c.owner}.\nموافق = كمّل عليها، إلغاء = سلّم وافتح وردية جديدة باسم ${n}`))oSh(n)}else oSh(n);sv();R();toast('أهلاً بيك يا '+us.n+' 👋')}
 function oSh(o){const no=S.shifts.filter(x=>x.date==td()).length+1;S.cur={date:td(),no,owner:o};S.shifts.push({date:td(),no,owner:o})}
 function nSh(){const n=$('#nsn').value.trim().replace(/\s+/g,' ');if(n.length<2){$('#nse').textContent='اكتب اسم صاحب الوردية (حرفين على الأقل)';return}if(!S.names.includes(n))S.names.push(n);sess.ow=n;saveSess();oSh(n);sv();R()}
 const escQ=v=>String(v).replace(/&/g,'&amp;').replace(/"/g,'&quot;').replace(/</g,'&lt;');
