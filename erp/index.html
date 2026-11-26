@@ -79,6 +79,7 @@ table{box-shadow:0 4px 18px rgba(20,40,90,.09);border-radius:18px;overflow:hidde
 @media print{.pg{position:static;overflow:visible}}
 
 </style><link rel="manifest" href="manifest.webmanifest"><meta name="theme-color" content="#0A57D6"><link rel="apple-touch-icon" href="../apple-touch-icon.png?v=2"><meta name="apple-mobile-web-app-title" content="M STORE ERP"></head><body><div id="app"><div class="spl"><div class="spb">💵</div><div class="br"><span class="mo">M</span> <span class="go">STORE</span></div><div class="stg">نظام إدارة المحل</div></div></div>
+<script>setTimeout(function(){var s=document.querySelector(".spl");if(s)s.remove()},2000);window.addEventListener("error",function(){var s=document.querySelector(".spl");if(s&&document.querySelectorAll("#app .card,#app .pg,#app .hb").length)s.remove()});</script>
 <script>
 const $=s=>document.querySelector(s);
 const escQ=v=>String(v).replace(/&/g,'&amp;').replace(/"/g,'&quot;').replace(/</g,'&lt;');
@@ -179,7 +180,7 @@ return`<div class="demo">🧪 نسخة تجريبية للتصميم — الب�
 </div>
 <h3 style="margin:14px 16px 0">آخر الحركات</h3>
 ${act.map(a=>`<div class="row ${a.c}"><div class="m"><b>${a.t}</b><small class="h">${a.d}</small></div><b>${f2(a.a)}</b></div>`).join('')||'<div class="card st n">مفيش حركات لسه</div>'}
-${SK&&CS?(()=>{const r=cFig(td());return`<div class="card" style="cursor:pointer" onclick="tab='c';R()"><h3>💵 الكاش النهاردة</h3><div style="display:grid;grid-template-columns:repeat(4,1fr);gap:8px;text-align:center"><div><small class="h">الدرج</small><br><b>${f2(r.has?r.cash:r.exp)}</b></div><div><small class="h">فودافون</small><br><b>${f2(r.v)}</b></div><div><small class="h">انستا</small><br><b>${f2(r.i)}</b></div><div><small class="h">العمولات</small><br><b>${f2(r.cm)}</b></div></div></div>`})():''}`};
+${cDash()}`};
 
 V.s=function(){const t=td(),s0=S.sales.slice().sort((a,b)=>b.no-a.no);
 return`<div class="bdg">فواتير النهاردة: ${dayS(t).length} · إجمالي: ${f2(dayS(t).reduce((s,x)=>s+x.tot,0))} ج</div>
@@ -402,13 +403,15 @@ async function cSbCheck(){try{const r=await fetch(SB.url+'/rest/v1/mstore_settin
 async function cPush(){if(!SK||!CS)return;const ts=new Date().toISOString();let res='net';
 try{const r=await fetch(SB.url+'/rest/v1/rpc/mstore_push',{method:'POST',headers:chdr(),body:JSON.stringify({p_data:JSON.parse(JSON.stringify(CS)),p_role:sess?sess.u.role:'owner',p_base:cTS||null,p_ts:ts})});res=r.ok?await r.json():'net'}catch(e){}
 if(res=='ok'){cTS=ts;cDirty=0}else if(res=='merged'){cDirty=0;cPull()}else if(res=='stale'){cDirty=0;cPull();alert('جهاز تاني عدّل البيانات - اتعملت مزامنة')}else{cTimer=setTimeout(cPush,5000)}}
-async function cPull(){if(!SK||cDirty||!CS)return;try{const g=await cGet();if(g&&g.updated_at>cTS){CS=g.data;cTS=g.updated_at;if(sess&&!document.getElementById('ov')&&!document.querySelector('.pg')&&(tab=='c'||tab=='h')&&!(document.activeElement&&document.activeElement.tagName=='INPUT'))R()}}catch(e){}}
+async function cPull(){if(!SK||cDirty||!CS)return;try{const g=await cGet();if(g&&g.updated_at>cTS){CS=g.data;cNorm();cTS=g.updated_at;if(sess&&!document.getElementById('ov')&&!document.querySelector('.pg')&&(tab=='c'||tab=='h')&&!(document.activeElement&&document.activeElement.tagName=='INPUT'))R()}}catch(e){}}
 function cSv(){cDirty=1;clearTimeout(cTimer);cTimer=setTimeout(cPush,700)}
-async function cBoot(){if(cLd||!SK||CS)return;cLd=1;try{const g=await cGet();if(g){CS=g.data;cTS=g.updated_at}}catch(e){}cLd=0;if(sess&&(tab=='c'||tab=='h'))R()}
+function cNorm(){const d={users:[],tiers:[[1,499,5,5],[500,899,10,10],[900,1000,15,10]],block:{s:1000,w:15,t:10},base:{d:0,v:0,i:0},ops:[],counts:{},shifts:[],cur:null,names:[],liq:[],open:{}};for(const k in d)if(CS[k]==null)CS[k]=d[k]}
+let cErr=0;
+async function cBoot(){if(cLd||!SK||CS)return;cLd=1;cErr=0;try{const g=await cGet();if(g){CS=g.data;cNorm();cTS=g.updated_at}else cErr=1}catch(e){cErr=1}cLd=0;if(sess&&(tab=='c'||tab=='h'))R()}
 async function cPair(){const c=$('#skc').value.trim();if(c.length<6){$('#ske').textContent='الكود 6 خانات على الأقل';return}
 SK=c;let ok=false;try{ok=await cSbCheck()}catch(e){}
 if(!ok){SK='';$('#ske').textContent='الكود مش صح أو مفيش نت';return}
-localStorage.setItem('ms-key',c);CS=null;cLd=0;cBoot();R();toast('اتربط الكاش ✅')}
+localStorage.setItem('ms-key',c);CS=null;cLd=0;cErr=0;cBoot();R();toast('اتربط الكاش ✅')}
 function cComm(t,A){if(!(A>0))return null;const k=t=='w'?2:3,T=CS.tiers,mx=Math.max(...T.map(x=>x[1])),f=r=>{const x=T.find(x=>r>=x[0]&&r<=x[1]);return x?+x[k]:null};
 if(A<=mx)return f(A);const B=CS.block,bl=Math.floor(A/B.s),rem=A%B.s,rf=rem>0?f(rem):0;return rf==null?null:bl*(t=='w'?+B.w:+B.t)+rf}
 function cFx(o){const e=o.ci=='t'||(!o.ci&&o.t=='w'),w=o.t=='w';return{d:(w?-o.a:o.a)+(e?0:o.c),l:(w?o.a:-o.a)+(e?o.c:0)}}
@@ -419,11 +422,13 @@ function cFig(date){let c={...CS.base};const O=CS.open||{},ds=[...new Set([...CS
 function cStat(r){if(!r.has)return['n','لسه الجرد ما اتعملش'];if(Math.abs(r.diff)<.005)return['g','✅ مطابق - الدرج مظبوط'];return r.diff<0?['r','عجز '+f2(-r.diff)+' ج في الدرج']:['y','زيادة '+f2(r.diff)+' ج في الدرج']}
 const cOWD=()=>{const m={};for(const q of CS.liq||[])if(!q.void)m[q.who]=(m[q.who]||0)+q.a;return m},cOT=()=>Object.values(cOWD()).reduce((s,x)=>s+x,0);
 const cDayO=dt=>CS.ops.filter(o=>o.dt==dt),cNxt=dt=>Math.max(0,...cDayO(dt).map(o=>o.no))+1;
+function cDash(){if(!(SK&&CS))return'';try{const r=cFig(td());return`<div class="card" style="cursor:pointer" onclick="tab='c';R()"><h3>💵 الكاش النهاردة</h3><div style="display:grid;grid-template-columns:repeat(4,1fr);gap:8px;text-align:center"><div><small class="h">الدرج</small><br><b>${f2(r.has?r.cash:r.exp)}</b></div><div><small class="h">فودافون</small><br><b>${f2(r.v)}</b></div><div><small class="h">انستا</small><br><b>${f2(r.i)}</b></div><div><small class="h">العمولات</small><br><b>${f2(r.cm)}</b></div></div></div>`}catch(e){return''}}
 
 V.c=function(){
 if(!SK)return`<div class="card"><h3>💵 الكاش</h3><small class="h">الكاش هنا هو نفس كاش تطبيق M STORE المستقل: نفس الدرج ونفس العمليات ونفس الأرقام. اربط الجهاز ده بكود المحل مرة واحدة وهيفضل متزامن.</small><label>كود المحل</label><input id="skc" type="password" autocomplete="off" placeholder="نفس كود تطبيق الكاش"><div class="er" id="ske"></div><button class="pri" onclick="cPair()">ربط الكاش</button><small class="h" style="display:block;margin-top:8px">لسه معملتش كود؟ افتح تطبيق الكاش الأول واعمل «فتح محل جديد» من هناك.</small></div>`;
-if(!CS)return'<div class="card st n">⏳ بيحمّل بيانات الكاش...</div>';
-const r=cFig(cvd),[k,t]=cStat(r),ro=cRO(),a=cDayO(cvd),last=a.slice(-1)[0],ct=CS.counts[cvd]||{};
+if(!CS)return cErr?`<div class="card st r">الكاش مش راضي يحمّل - اتأكد من النت وجرب تاني</div><div class="card"><button class="pri" style="margin:0" onclick="cErr=0;cLd=0;cBoot();R()">إعادة المحاولة</button></div>`:'<div class="card st n">⏳ بيحمّل بيانات الكاش...</div>';
+let r;try{r=cFig(cvd)}catch(e){return`<div class="card st r">حصلت مشكلة في قراءة بيانات الكاش</div><div class="card"><button class="pri" style="margin:0" onclick="CS=null;cLd=0;cErr=0;cBoot();R()">إعادة تحميل الكاش</button></div>`}
+const[k,t]=cStat(r),ro=cRO(),a=cDayO(cvd),last=a.slice(-1)[0],ct=CS.counts[cvd]||{};
 return`<div class="bdg">${cDirty?'⏫ بيرفع التعديلات...':'✅ متزامن'} · العملية الجاية #${cNxt(td())}${last&&cvd==td()?` · آخر عملية #${last.no} · ${tm(last.tm)}`:''}</div>
 <div class="card"><label style="margin:0">اليوم</label><input type="date" value="${cvd}" onchange="cvd=this.value||td();R()"></div>
 <div class="card"><h3>🌅 الرصيد الافتتاحي لليوم</h3><small class="h" style="margin:-4px 0 8px">${r.man?'مكتوب يدوي لليوم ده':'جاي لوحده من قفلة اليوم اللي قبله'}</small><div style="display:grid;grid-template-columns:repeat(3,1fr);gap:8px">${[['d','الدرج'],['v','فودافون'],['i','انستا']].map(([k2,n2])=>`<div><label style="margin:0;font-size:16px">${n2}</label><input type="number" inputmode="decimal" value="${r.open[k2]}" onchange="cSo('${k2}',this.value)" ${ro?'disabled':''}></div>`).join('')}</div>${r.man&&!ro?`<button style="width:100%;margin-top:10px" onclick="cRo()">رجّعه تلقائي</button>`:''}</div>
@@ -480,5 +485,5 @@ const raw=localStorage.getItem('merp1');S=raw?JSON.parse(raw):await defS();if(!r
 applyBrand();
 const sv0=localStorage.getItem('merp-sess');if(sv0){try{const q=JSON.parse(sv0),us=S.users.find(x=>x.u==q.u);if(us&&!us.off&&us.h==q.h)sess={u:us};else localStorage.removeItem('merp-sess')}catch(e){localStorage.removeItem('merp-sess')}}
 setTimeout(R,900);setInterval(cPull,10000)}
-init();
+init().catch(()=>{try{R()}catch(e){}});
 </script></body></html>
