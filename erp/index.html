@@ -370,15 +370,17 @@ function svM(){const c=$('#mc').value.trim(),dv=$('#md').value.trim();if(c.lengt
 const pid=+$('#mpt').value||null;if(pid){const p=S.prods.find(x=>x.id==pid);if(p.stock<1)return $('#me2').textContent='القطعة مش متاحة في المخزون';p.stock--}
 S.maint.push({id:Date.now(),no:S.seq.m++,dt:td(),cust:c,dev:dv,prob:$('#mp2').value.trim(),pid,fee:+$('#mf').value||0,st:'جاري'});
 save();R();toast('اتحفظ التيكيت ✅')}
-function adM(id){const m=S.maint.find(x=>x.id==id);if(!m)return;m.st=m.st=='جاري'?'تم':'مستلم';save();R()}
+function adM(id){const m=S.maint.find(x=>x.id==id);if(!m)return;const was=m.st;m.st=m.st=='جاري'?'تم':'مستلم';
+if(was!='مستلم'&&m.st=='مستلم'&&m.fee>0)khPush({io:1,cat:'صيانة',amt:m.fee,note:'تيكيت #'+m.no+' · '+m.dev,src:'m'+m.id});
+save();R()}
 
 /* ---------- accounts ---------- */
 let aSub='',ajM='';
-const ASUBS=[['m','📊','الملخص'],['k','🏦','الخزنة'],['j','📒','دفتر اليومية'],['x','💸','المصاريف']];
+const ASUBS=[['m','📊','الملخص'],['k','🏦','الخزنة'],['j','📒','دفتر اليومية'],['x','💸','المصاريف'],['u','📑','كشوفات']];
 function aSubBar(){return`<div class="chps" style="margin-top:12px"><button class="chp" onclick="aSub='';R()">‹ الحسابات</button>${ASUBS.map(([k2,i2,n2])=>`<button class="chp ${aSub==k2?'on':''}" onclick="aSub='${k2}';R()">${n2}</button>`).join('')}</div>`}
 V.a=function(){
-if(!aSub)return`<div class="g2" style="margin-top:14px">${ASUBS.map(([k2,i2,n2])=>{const d2={m:'المبيعات والربح والمستحقات',k:'رصيد الخزنة: '+f2(khBal())+' ج',j:'قيد مدين/دائن لكل حركة',x:'مصاريف وإيجار ومرتبات وسلف'}[k2];return`<div class="card bigch" onclick="aSub='${k2}';R()"><div style="font-size:36px">${i2}</div><h3>${n2}</h3><small class="h">${d2}</small></div>`}).join('')}</div>`;
-return aSubBar()+(aSub=='m'?aAccV():aSub=='k'?aKhV():aSub=='j'?aJrnV():aExpV())}
+if(!aSub)return`<div class="g2" style="margin-top:14px">${ASUBS.map(([k2,i2,n2])=>{const d2={m:'المبيعات والربح والمستحقات',k:'رصيد الخزنة: '+f2(khBal())+' ج',j:'قيد مدين/دائن لكل حركة',x:'مصاريف وإيجار ومرتبات وسلف',u:'كشف حساب عميل أو مورد ودفعاته'}[k2];return`<div class="card bigch" onclick="aSub='${k2}';R()"><div style="font-size:36px">${i2}</div><h3>${n2}</h3><small class="h">${d2}</small></div>`}).join('')}</div>`;
+return aSubBar()+(aSub=='m'?aAccV():aSub=='k'?aKhV():aSub=='j'?aJrnV():aSub=='x'?aExpV():aStV())}
 
 function aAccV(){const st=S.sales.reduce((s,x)=>s+x.tot,0),sc=S.sales.reduce((s,x)=>s+costOf(x),0),pt=S.purs.reduce((s,x)=>s+x.tot,0),mf=S.maint.filter(m=>m.st!='ملغي').reduce((s,m)=>s+m.fee,0);
 return`<div class="g2" style="margin-top:14px">
@@ -421,6 +423,7 @@ return`<div class="bdg">مصاريف الشهر ده: ${f2(me.reduce((s,x)=>s+x.
 <div class="g2">
 <div class="card"><h3>💸 مصروف جديد</h3><label>النوع</label><select id="xpc"><option>مصاريف</option><option>إيجار</option><option>أخرى</option></select><label>المبلغ</label><input id="xpa" type="number" inputmode="decimal"><label>البيان</label><input id="xpn"><div class="er" id="xpe"></div><button class="pri" onclick="svExp()">تسجيل المصروف</button></div>
 <div class="card"><h3>💰 سلفة جديدة</h3><label>اسم الموظف</label><input id="sln" list="slnl"><datalist id="slnl">${S.users.map(x=>`<option value="${escQ(x.n)}">`).join('')}</datalist><label>المبلغ</label><input id="sla" type="number" inputmode="decimal"><label>ملاحظة</label><input id="slm"><div class="er" id="sle"></div><button class="pri" onclick="svSlf()">تسجيل السلفة</button></div>
+<div class="card"><h3>👷 مرتب شهر</h3><label>اسم الموظف</label><input id="san" list="slnl"><label>الشهر</label><input id="sam" type="month" value="${td().slice(0,7)}"><label>المرتب (قبل خصم السلف)</label><input id="sag" type="number" inputmode="decimal"><small class="h">السلف المستحقة على الموظف بتتخصم تلقائي من المرتب، والصافي بيتصرف من الخزنة</small><div class="er" id="sae"></div><button class="pri" onclick="svSal()">تسجيل المرتب</button></div>
 </div>
 ${Object.keys(slfB).length?`<div class="card"><h3>أرصدة السلف الحالية</h3>${Object.entries(slfB).map(([n,b])=>`<div class="row" style="margin:6px 0"><b class="m">${escQ(n)}</b><b>${f2(b)}</b></div>`).join('')}</div>`:''}
 <h3 style="margin:14px 16px 0">سجل المصاريف</h3>
@@ -429,6 +432,31 @@ ${S.exp.slice().sort((a,b)=>b.tm-a.tm).slice(0,15).map(x=>`<div class="row w"><d
 ${S.slf.slice().sort((a,b)=>b.tm-a.tm).slice(0,10).map(x=>`<div class="row"><div class="m"><b>${escQ(x.n)} · ${f2(x.amt)}</b><small class="h">${x.dt} · متبقي ${f2(x.rem)}</small></div></div>`).join('')||'<div class="card st n">مفيش سلف</div>'}`}
 function svExp(){const a=+$('#xpa').value;if(!(a>0))return $('#xpe').textContent='اكتب مبلغ أكبر من صفر';const c=$('#xpc').value,nt=$('#xpn').value.trim();const id=Date.now();S.exp.push({id,dt:td(),tm:Date.now(),cat:c,amt:a,note:nt});khPush({io:-1,cat:c,amt:a,note:nt,src:'e'+id});save();R();toast('اتسجل المصروف ✅')}
 function svSlf(){const n=$('#sln').value.trim(),a=+$('#sla').value;if(n.length<2)return $('#sle').textContent='اكتب اسم الموظف';if(!(a>0))return $('#sle').textContent='اكتب مبلغ أكبر من صفر';S.slf.push({id:Date.now(),dt:td(),tm:Date.now(),n,amt:a,rem:a,note:$('#slm').value.trim()});khPush({io:-1,cat:'سلفة',amt:a,note:n,src:'sl'});save();R();toast('اتسجلت السلفة ✅')}
+function svSal(){const n=$('#san').value.trim(),mo=$('#sam').value,g=+$('#sag').value;
+if(n.length<2)return $('#sae').textContent='اكتب اسم الموظف';if(!(g>0))return $('#sae').textContent='اكتب المرتب';
+let ded=Math.min(g,S.slf.filter(x=>x.n==n&&!x.void).reduce((s,x)=>s+x.rem,0)),left=ded;
+for(const x of S.slf.filter(x=>x.n==n&&!x.void&&x.rem>0).sort((a,b)=>a.tm-b.tm)){if(left<=0)break;const d=Math.min(x.rem,left);x.rem-=d;left-=d}
+const net=g-ded;S.sal.push({id:Date.now(),dt:td(),tm:Date.now(),n,mo,g,ded,net});khPush({io:-1,cat:'مرتبات',amt:net,note:n+' · '+mo,src:'sa'});save();R();
+toast(ded>0?('اتسجل المرتب ✅ - اتخصم '+f2(ded)+' سلف'):'اتسجل المرتب ✅')}
+
+let stT='c',stP=0;
+function aStV(){const pt=stT,L=pt=='c'?S.custs:S.sups;
+if(!stP)return`<div style="margin:12px 16px 0"><div class="seg"><button class="${pt=='c'?'on':''}" onclick="stT='c';stP=0;R()">العملاء</button><button class="${pt=='s'?'on':''}" onclick="stT='s';stP=0;R()">الموردين</button></div></div>
+<div class="bdg">${pt=='c'?'إجمالي مستحق على العملاء':'إجمالي مستحق للموردين'}: ${f2(sumBal(L))} ج</div>
+${L.map(x=>`<div class="row" onclick="stP=${x.id};R()"><div class="m"><b>${escQ(x.n)}</b><small class="h">${x.ph||''}</small></div><div style="text-align:center"><b class="${x.bal>0?'neg':''}">${f2(x.bal)}</b><small class="h">${x.bal>0?(pt=='c'?'عليه':'له'):'صفر'}</small></div><span style="color:var(--t2)">‹</span></div>`).join('')||'<div class="card st n">مفيش '+(pt=='c'?'عملاء':'موردين')+' لسه</div>'}`;
+const p=L.find(x=>x.id==stP);if(!p){stP=0;return aStV()}
+const invs=pt=='c'?S.sales.filter(x=>x.cust==stP&&x.pay=='آجل').map(x=>({tm:x.tm,dt:x.dt,db:x.tot,cr:0,note:'فاتورة #'+x.no})):S.purs.filter(x=>x.sup==stP&&x.pay=='آجل').map(x=>({tm:x.tm||0,dt:x.dt,db:x.tot,cr:0,note:'أمر شراء #'+x.no}));
+const pays=S.pay.filter(x=>x.pt==pt&&x.pid==stP).map(x=>({tm:x.tm,dt:x.dt,db:0,cr:x.amt,note:'دفعة'+(x.note?' · '+x.note:'')}));
+let bal=0;const rows=[...invs,...pays].sort((a,b)=>a.tm-b.tm).map(r=>{bal+=r.db-r.cr;return`<tr><td>${r.dt}</td><td>${escQ(r.note)}</td><td>${r.db?f2(r.db):''}</td><td>${r.cr?f2(r.cr):''}</td><td>${f2(bal)}</td></tr>`}).join('');
+return`<div class="subb"><button onclick="stP=0;R()">‹ الكشوفات</button><b>${escQ(p.n)}</b></div>
+<div class="bdg">الرصيد الحالي ${pt=='c'?'(عليه)':'(له)'}: ${f2(p.bal)} ج</div>
+<div class="card"><h3>تسجيل دفعة</h3><label>المبلغ</label><input id="pya" type="number" inputmode="decimal"><label>ملاحظة</label><input id="pyn"><div class="er" id="pye"></div><button class="pri" onclick="svPay()">تسجيل الدفعة</button><small class="h" style="display:block;margin-top:8px">${pt=='c'?'الدفعة بتدخل الخزنة وبتنقص المستحق على العميل':'الدفعة بتخرج من الخزنة وبتنقص المستحق للمورد'}</small></div>
+<div class="tw"><table><tr><th>التاريخ</th><th>البيان</th><th>زيادة</th><th>دفعة</th><th>الرصيد</th></tr>${rows||'<tr><td colspan=5>مفيش حركة لسه</td></tr>'}</table></div>`}
+function svPay(){const a=+$('#pya').value;if(!(a>0))return $('#pye').textContent='اكتب مبلغ أكبر من صفر';
+const L=stT=='c'?S.custs:S.sups,p=L.find(x=>x.id==stP);if(!p)return;
+p.bal-=a;S.pay.push({id:Date.now(),dt:td(),tm:Date.now(),pt:stT,pid:stP,amt:a,note:$('#pyn').value.trim()});
+khPush({io:stT=='c'?1:-1,cat:stT=='c'?'تحصيل من عميل':'سداد لمورد',amt:a,note:p.n,src:'py'});
+save();R();toast('اتسجلت الدفعة ✅')}
 
 /* ---------- users ---------- */
 let uRole='cashier';
