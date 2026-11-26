@@ -72,6 +72,10 @@ table{box-shadow:0 4px 18px rgba(20,40,90,.09);border-radius:18px;overflow:hidde
 .spl .stg{font-size:16px;font-weight:600;opacity:.85;margin-top:8px;animation:up .5s .26s ease-out both}
 @keyframes up{from{opacity:0;transform:translateY(16px)}to{opacity:1;transform:none}}
 .spl.out{transition:opacity .45s ease,transform .45s ease;opacity:0;transform:scale(1.04);pointer-events:none}
+
+.cf{position:fixed;inset:0;border:0;width:100%;height:100%;background:var(--bg);z-index:1}
+@media screen and (min-width:601px){.cf{right:84px;width:auto}}
+@media screen and (max-width:600px){.cf{bottom:calc(84px + env(safe-area-inset-bottom,0px));height:auto}
 @media print{.pg{position:static;overflow:visible}}
 
 </style><link rel="manifest" href="manifest.webmanifest"><meta name="theme-color" content="#0A57D6"><link rel="apple-touch-icon" href="../apple-touch-icon.png?v=2"><meta name="apple-mobile-web-app-title" content="M STORE ERP"></head><body><div id="app"><div class="spl"><div class="spb">💵</div><div class="br"><span class="mo">M</span> <span class="go">STORE</span></div><div class="stg">نظام إدارة المحل</div></div></div>
@@ -140,10 +144,12 @@ const stockVal=()=>S.prods.reduce((s,p)=>s+p.cost*p.stock,0);
 
 /* ---------- main render ---------- */
 function R(){killSpl();if(!sess)return loginV();applyBrand();
-const T={h:'الرئيسية',s:'المبيعات',p:'المنتجات',b:'المشتريات',m:'المزيد'};
-const TB=[['h','🏠'],['s','🧾'],['p','📦'],['b','🛒'],['m','⚙️']];
+const T={h:'الرئيسية',s:'المبيعات',p:'المنتجات',b:'المشتريات',c:'الكاش',m:'المزيد'};
+const TB=[['h','🏠'],['s','🧾'],['p','📦'],['b','🛒'],['c','💵'],['m','⚙️']];
 const FB={s:'nS()',p:'nP()',b:'nB()'};
-$('#app').innerHTML=`<div class="hb"><div class="br">${brH()}</div><div class="sub">${escQ(S.branch)} · ${sess.u.n} · ${sess.u.role=='owner'?'مالك':'كاشير'}</div></div><div id="mn">${V[tab]()}</div>${FB[tab]?`<button id="fab" onclick="${FB[tab]}">+</button>`:''}<div id="tb">${TB.map(([k,i])=>`<button class="${tab==k?'on':''}" onclick="tab='${k}';R()"><span>${i}</span>${T[k]}</button>`).join('')}</div>`}
+const tbH=`<div id="tb">${TB.map(([k,i])=>`<button class="${tab==k?'on':''}" onclick="tab='${k}';R()"><span>${i}</span>${T[k]}</button>`).join('')}</div>`;
+if(tab=='c'){const ap=$('#app');ap.innerHTML='';if(!window._cf){window._cf=document.createElement('iframe');window._cf.className='cf';window._cf.src='../';window._cf.title='الكاش'}ap.appendChild(window._cf);ap.insertAdjacentHTML('beforeend',tbH);return}
+$('#app').innerHTML=`<div class="hb"><div class="br">${brH()}</div><div class="sub">${escQ(S.branch)} · ${sess.u.n} · ${sess.u.role=='owner'?'مالك':'كاشير'}</div></div><div id="mn">${V[tab]()}</div>${FB[tab]?`<button id="fab" onclick="${FB[tab]}">+</button>`:''}${tbH}`}
 
 const V={};
 V.h=function(){const t=td(),s0=dayS(t),st=s0.reduce((s,x)=>s+x.tot,0),pt=S.purs.filter(x=>x.dt==t).reduce((s,x)=>s+x.tot,0),mc=S.maint.filter(x=>x.st=='جاري').length;
