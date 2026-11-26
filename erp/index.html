@@ -178,9 +178,10 @@ return`<div class="demo">🧪 نسخة تجريبية للتصميم — الب�
 <div class="card k"><small>🏭 مستحق للموردين</small><b>${f2(sumBal(S.sups))}</b></div>
 <div class="card k"><small>🔧 صيانة جارية</small><b>${mc}</b></div>
 </div>
+${cDash()}
 <h3 style="margin:14px 16px 0">آخر الحركات</h3>
 ${act.map(a=>`<div class="row ${a.c}"><div class="m"><b>${a.t}</b><small class="h">${a.d}</small></div><b>${f2(a.a)}</b></div>`).join('')||'<div class="card st n">مفيش حركات لسه</div>'}
-${cDash()}`};
+`};
 
 V.s=function(){const t=td(),s0=S.sales.slice().sort((a,b)=>b.no-a.no);
 return`<div class="bdg">فواتير النهاردة: ${dayS(t).length} · إجمالي: ${f2(dayS(t).reduce((s,x)=>s+x.tot,0))} ج</div>
