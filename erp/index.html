@@ -163,8 +163,8 @@ function R(){killSpl();if(!sess)return loginV();applyBrand();
 const T={h:'الرئيسية',s:'المبيعات',c:'الكاش',p:'المنتجات',b:'المشتريات',g:'الجرد',m:'المزيد'};
 const TB=[['h','🏠'],['s','🧾'],['c','💵'],['p','📦'],['b','🛒'],['g','🧮'],['m','⚙️']];
 const FB={s:'nS()',p:'nP()',b:'nB()',c:'cSh()'};
-$('#app').innerHTML=`<div class="hb"><div class="br">${brH()}</div><div class="sub">${escQ(S.branch)} · ${sess.u.n} · ${sess.u.role=='owner'?'مالك':'كاشير'}</div></div><div id="mn">${V[tab]()}</div>${FB[tab]?`<button id="fab" onclick="${FB[tab]}">+</button>`:''}<div id="tb">${TB.map(([k,i])=>`<button class="${tab==k?'on':''}" onclick="tab='${k}';R()"><span>${i}</span>${T[k]}</button>`).join('')}</div>`}
-if(SK&&!CS)cBoot()
+$('#app').innerHTML=`<div class="hb"><div class="br">${brH()}</div><div class="sub">${escQ(S.branch)} · ${sess.u.n} · ${sess.u.role=='owner'?'مالك':'كاشير'}</div></div><div id="mn">${V[tab]()}</div>${FB[tab]?`<button id="fab" onclick="${FB[tab]}">+</button>`:''}<div id="tb">${TB.map(([k,i])=>`<button class="${tab==k?'on':''}" onclick="tab='${k}';R()"><span>${i}</span>${T[k]}</button>`).join('')}</div>`;
+if(SK&&!CS)cBoot()}
 
 const V={};
 V.h=function(){const t=td(),s0=dayS(t),st=s0.reduce((s,x)=>s+x.tot,0),pt=S.purs.filter(x=>x.dt==t).reduce((s,x)=>s+x.tot,0),mc=S.maint.filter(x=>x.st=='جاري').length;
