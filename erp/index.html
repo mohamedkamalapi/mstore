@@ -171,8 +171,8 @@ function xPdf(t2){const t=document.title;document.title='M STORE '+t2;window.ona
 
 /* ---------- main render ---------- */
 function R(){mig();killSpl();if(!sess)return loginV();applyBrand();
-const T={h:'الرئيسية',s:'المبيعات',b:'المشتريات',k:'المخزون',c:'الكاش',a:'الحسابات',t:'الصيانة',u:'العملاء',e:'الإعدادات'};
-const TB=[['h','🏠'],['s','🧾'],['b','🛒'],['k','📦'],['c','💵'],['a','🧮'],['t','🔧'],['u','👥'],['e','⚙️']];
+const T={h:'الرئيسية',s:'المبيعات',b:'المشتريات',k:'المخزون',c:'الكاش',a:'الحسابات',t:'الصيانة',u:'العملاء',r:'التقارير',e:'الإعدادات'};
+const TB=[['h','🏠'],['s','🧾'],['b','🛒'],['k','📦'],['c','💵'],['a','🧮'],['t','🔧'],['u','👥'],['r','📈'],['e','⚙️']];
 const fb=tab=='s'?'nS()':tab=='b'?'nB()':tab=='k'&&kSub=='p'?'nP()':tab=='c'&&CS&&(!cSub||cSub=='h'||cSub=='o')?'cSh()':'';
 $('#app').innerHTML=`<div class="hb"><div class="br">${brH()}</div><div class="sub">${escQ(S.branch)} · ${sess.u.n} · ${sess.u.role=='owner'?'مالك':'كاشير'}</div></div><div id="mn">${V[tab]()}</div>${fb?`<button id="fab" onclick="${fb}">+</button>`:''}<div id="tb"><div class="tbr">${brH()}</div>${TB.map(([k,i])=>`<button class="${tab==k?'on':''}" onclick="tab='${k}';R()"><span>${i}</span>${T[k]}</button>`).join('')}</div>`;
 if(SK&&!CS)cBoot()}
@@ -472,6 +472,73 @@ const L=stT=='c'?S.custs:S.sups,p=L.find(x=>x.id==stP);if(!p)return;
 p.bal-=a;S.pay.push({id:Date.now(),dt:td(),tm:Date.now(),pt:stT,pid:stP,amt:a,note:$('#pyn').value.trim()});
 khPush({io:stT=='c'?1:-1,cat:stT=='c'?'تحصيل من عميل':'سداد لمورد',amt:a,note:p.n,src:'py'});
 save();R();toast('اتسجلت الدفعة ✅')}
+
+/* ---------- reports ---------- */
+let rSub='',rF='',rT='';
+const RSUBS=[['s','🧾','المبيعات','فواتير المبيعات بالفترة والإجماليات'],['r','⭐','الأرباح','ربح كل فاتورة ومجمل الربح'],['b','🛒','المشتريات','أوامر الشراء بالفترة'],['k','📦','المخزون والجرد','الأصناف والكميات وقيمة المخزون الحالية'],['c','🏦','الخزنة','حركة الخزنة داخل وخارج بالفترة'],['x','💸','المصاريف','المصاريف بالنوع والفترة'],['l','👷','المرتبات والسلف','المرتبات المدفوعة وأرصدة السلف'],['u','👥','الأرصدة','المستحق على العملاء وللموردين'],['t','🔧','الصيانة','التيكيتات وحالاتها وأجورها'],['j','📒','دفتر اليومية','قيد مدين/دائن برصيد متحرك']];
+const dstr=d=>d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0');
+const inR=x=>(!rF||x.dt>=rF)&&(!rT||x.dt<=rT);
+function rPre(d){if(d<0){rF=rT=''}else{const t=new Date(),f2d=new Date(t);if(d==30)f2d.setDate(1);else f2d.setDate(f2d.getDate()-d);rF=dstr(f2d);rT=dstr(t)}R()}
+function rFil(){if(!['s','r','b','c','x','l','t','j'].includes(rSub))return'';
+return`<div class="card" style="display:flex;flex-wrap:wrap;gap:10px;align-items:flex-end">
+<div style="flex:1;min-width:130px"><label>من</label><input type="date" value="${rF}" onchange="rF=this.value;R()"></div>
+<div style="flex:1;min-width:130px"><label>إلى</label><input type="date" value="${rT}" onchange="rT=this.value;R()"></div>
+<div class="chps" style="margin:0">${[['اليوم',0],['الأسبوع',6],['الشهر',30],['الكل',-1]].map(([n2,d2])=>`<button class="chp" onclick="rPre(${d2})">${n2}</button>`).join('')}</div></div>`}
+V.r=function(){
+if(!rSub)return`<div class="g2" style="margin-top:14px">${RSUBS.map(([k2,i2,n2,d2])=>`<div class="card bigch" onclick="rSub='${k2}';R()"><div style="font-size:36px">${i2}</div><h3>${n2}</h3><small class="h">${d2}</small></div>`).join('')}</div>`;
+const nm=RSUBS.find(x=>x[0]==rSub)[2];
+return`<div class="subb"><button onclick="rSub='';R()">‹ التقارير</button><b>${nm}</b></div>`+rFil()+rView()}
+function rView(){const d=rData();
+const rng=(rF||rT)?` <small class="h">${rF||'البداية'} ← ${rT||td()}</small>`:'';
+const cell=(v,ty2)=>typeof v=='string'?escQ(v):ty2=='m'?f2(v):(''+v);
+const tbl=t=>`<div class="tw"><table>${t.h2?`<tr><th colspan="${t.head.length}" style="text-align:right">${t.h2}</th></tr>`:''}<tr>${t.head.map(h=>`<th>${h}</th>`).join('')}</tr>${t.body.map(r=>`<tr>${r.map((v,i)=>`<td>${cell(v,t.ty[i])}</td>`).join('')}</tr>`).join('')||`<tr><td colspan="${t.head.length}">مفيش بيانات للفترة دي</td></tr>`}${t.foot?`<tr>${t.foot.map((v,i)=>`<th>${v===''?'':cell(v,t.ty[i])}</th>`).join('')}</tr>`:''}</table></div>`;
+return`<div class="bdg">${escQ(d.t)}${rng}</div>
+<div class="c2" style="margin:4px 16px 0"><button onclick="xPdf('تقرير')">⬇️ تصدير PDF</button><button onclick="xExp()">📊 تصدير Excel</button></div>
+${d.tables.map(tbl).join('')}`}
+let _xlsL=0;
+function xExp(){const d=rData();const aoa=[];
+d.tables.forEach((t,ti)=>{if(ti)aoa.push([]);if(t.h2)aoa.push([t.h2]);aoa.push(t.head);t.body.forEach(r=>aoa.push(r));if(t.foot)aoa.push(t.foot.map(v=>v===''?'':v))});
+const nm2=d.t+' '+td();
+const go=()=>{const wb=XLSX.utils.book_new();const ws=XLSX.utils.aoa_to_sheet(aoa);ws['!views']=[{RTL:true}];ws['!cols']=d.tables[0].head.map(()=>({wch:20}));XLSX.utils.book_append_sheet(wb,ws,'تقرير');XLSX.writeFile(wb,nm2+'.xlsx')};
+if(window.XLSX)return go();
+if(_xlsL)return toast('بنحمّل مكتبة الإكسل...');
+_xlsL=1;const sc=document.createElement('script');sc.src='https://cdn.sheetjs.com/xlsx-0.20.3/package/dist/xlsx.full.min.js';
+sc.onload=go;sc.onerror=()=>{const csv='﻿'+aoa.map(r=>r.map(c2=>'"'+String(c2).replace(/"/g,'""')+'"').join(',')).join('\r\n');const a=document.createElement('a');a.href=URL.createObjectURL(new Blob([csv],{type:'text/csv;charset=utf-8'}));a.download=nm2+'.csv';a.click();toast('مفيش اتصال بالمكتبة - نزّلنا CSV بيفتح في إكسل')};
+document.head.appendChild(sc)}
+function rData(){const f=S.sales.filter(inR).sort((a,b)=>(a.tm||0)-(b.tm||0));
+switch(rSub){
+case 's':{const cash=f.filter(x=>x.pay!='آجل').reduce((s2,x)=>s2+x.tot,0),crd=f.filter(x=>x.pay=='آجل').reduce((s2,x)=>s2+x.tot,0);
+return{t:'تقرير المبيعات',tables:[{head:['التاريخ','رقم','العميل','القطع','الدفع','البائع','الإجمالي'],ty:['s','n','s','n','s','s','m'],body:f.map(x=>[x.dt,x.no,x.cn,x.items.reduce((s2,i)=>s2+i.q,0),x.pay,x.us||'',x.tot]),foot:['إجمالي ('+f.length+' فاتورة)','','','','كاش '+f2(cash),'آجل '+f2(crd),f.reduce((s2,x)=>s2+x.tot,0)]}]}}
+case 'r':{const mf=S.maint.filter(m2=>inR(m2)&&m2.st!='ملغي').reduce((s2,m2)=>s2+m2.fee,0);
+const rev=f.reduce((s2,x)=>s2+x.tot,0),co=f.reduce((s2,x)=>s2+costOf(x),0);
+return{t:'تقرير الأرباح',tables:[
+{h2:'ربح فواتير المبيعات',head:['التاريخ','رقم','العميل','المبيعات','التكلفة','الربح'],ty:['s','n','s','m','m','m'],body:f.map(x=>[x.dt,x.no,x.cn,x.tot,costOf(x),x.tot-costOf(x)]),foot:['الإجمالي','','',rev,co,rev-co]},
+{h2:'الملخص',head:['البند','القيمة'],ty:['s','m'],body:[['مبيعات البضاعة',rev],['تكلفة البضاعة المباعة',co],['ربح البضاعة',rev-co],['أجور الصيانة',mf],['مجمل الربح',rev-co+mf]],foot:null}]}}
+case 'b':{const L=S.purs.filter(inR).sort((a,b)=>a.no-b.no);
+return{t:'تقرير المشتريات',tables:[{head:['التاريخ','رقم','المورد','القطع','الدفع','الإجمالي'],ty:['s','n','s','n','s','m'],body:L.map(x=>[x.dt,x.no,x.sn,x.items.reduce((s2,i)=>s2+i.q,0),x.pay,x.tot]),foot:['الإجمالي ('+L.length+' أمر)','','','','',L.reduce((s2,x)=>s2+x.tot,0)]}]}}
+case 'k':{const L=S.prods.slice().sort((a,b)=>a.cat==b.cat?0:a.cat>b.cat?1:-1);
+return{t:'تقرير المخزون والجرد - '+td(),tables:[{head:['الكود','الصنف','الفئة','الكمية','التكلفة','سعر البيع','قيمة المخزون'],ty:['s','s','s','n','m','m','m'],body:L.map(p=>[p.sku,p.n,p.cat,p.stock,p.cost,p.price,p.stock*p.cost]),foot:['الإجمالي','','',L.reduce((s2,p)=>s2+p.stock,0),'','',stockVal()]}]}}
+case 'c':{const L=S.kh.filter(x=>!x.void&&inR(x)).sort((a,b)=>a.tm-b.tm);
+const inn=L.filter(x=>x.io>0).reduce((s2,x)=>s2+x.amt,0),out=L.filter(x=>x.io<0).reduce((s2,x)=>s2+x.amt,0);
+return{t:'تقرير الخزنة',tables:[
+{head:['التاريخ','البند','البيان','داخل','خارج'],ty:['s','s','s','m','m'],body:L.map(x=>[x.dt,x.cat,x.note||'',x.io>0?x.amt:'',x.io<0?x.amt:'']),foot:['الإجمالي','','صافي الفترة: '+f2(inn-out),inn,out]},
+{head:['رصيد الخزنة الحالي'],ty:['m'],body:[[khBal()]],foot:null}]}}
+case 'x':{const L=S.exp.filter(inR).sort((a,b)=>a.tm-b.tm);
+return{t:'تقرير المصاريف',tables:[{head:['التاريخ','النوع','البيان','المبلغ'],ty:['s','s','s','m'],body:L.map(x=>[x.dt,x.cat,x.note||'',x.amt]),foot:['الإجمالي ('+L.length+' بند)','','',L.reduce((s2,x)=>s2+x.amt,0)]}]}}
+case 'l':{const L=S.sal.filter(inR).sort((a,b)=>a.tm-b.tm),A=S.slf.filter(inR).sort((a,b)=>a.tm-b.tm);
+return{t:'تقرير المرتبات والسلف',tables:[
+{h2:'المرتبات المدفوعة',head:['التاريخ','الموظف','الشهر','المرتب','خصم سلف','الصافي'],ty:['s','s','s','m','m','m'],body:L.map(x=>[x.dt,x.n,x.mo,x.g,x.ded,x.net]),foot:['الإجمالي','','',L.reduce((s2,x)=>s2+x.g,0),L.reduce((s2,x)=>s2+x.ded,0),L.reduce((s2,x)=>s2+x.net,0)]},
+{h2:'السلف',head:['التاريخ','الموظف','المبلغ','المتبقي','ملاحظة'],ty:['s','s','m','m','s'],body:A.map(x=>[x.dt,x.n,x.amt,x.rem,x.note||'']),foot:['الإجمالي','',A.reduce((s2,x)=>s2+x.amt,0),A.reduce((s2,x)=>s2+x.rem,0),'']}]}}
+case 'u':{return{t:'تقرير أرصدة العملاء والموردين - '+td(),tables:[
+{h2:'العملاء',head:['العميل','الموبايل','الرصيد (عليه)'],ty:['s','s','m'],body:S.custs.map(x=>[x.n,x.ph||'',x.bal||0]),foot:['الإجمالي','',sumBal(S.custs)]},
+{h2:'الموردين',head:['المورد','الموبايل','الرصيد (له)'],ty:['s','s','m'],body:S.sups.map(x=>[x.n,x.ph||'',x.bal||0]),foot:['الإجمالي','',sumBal(S.sups)]}]}}
+case 't':{const L=S.maint.filter(inR).sort((a,b)=>a.no-b.no);const act=L.filter(x=>x.st!='ملغي');
+return{t:'تقرير الصيانة',tables:[{head:['التاريخ','رقم','العميل','الجهاز','العطل','الحالة','السعر'],ty:['s','n','s','s','s','s','m'],body:L.map(m2=>[m2.dt,m2.no,m2.cust,m2.dev,m2.prob||'',m2.st,m2.fee||0]),foot:['إجمالي الأجور (بدون الملغي)','','','','',act.length+' تيكيت',act.reduce((s2,m2)=>s2+m2.fee,0)]}]}}
+case 'j':{const L=S.kh.filter(x=>!x.void&&inR(x)).sort((a,b)=>a.tm-b.tm);
+let bal=rF?S.kh.filter(x=>!x.void&&x.dt<rF).reduce((s2,x)=>s2+x.io*x.amt,0):0;const open=bal;
+const body=L.map(x=>{bal+=x.io*x.amt;return[x.dt,x.cat,x.note||'',x.io>0?x.amt:'',x.io<0?x.amt:'',bal]});
+return{t:'دفتر اليومية',tables:[{head:['التاريخ','البند','البيان','مدين (داخل)','دائن (خارج)','الرصيد'],ty:['s','s','s','m','m','m'],body:[['','','رصيد أول المدة','','',open],...body],foot:['نهاية المدة','','','','',bal]}]}}
+}}
 
 /* ---------- users ---------- */
 let uRole='cashier';
