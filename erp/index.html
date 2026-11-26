@@ -1,0 +1,336 @@
+<!doctype html><html lang="ar" dir="rtl"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="apple-mobile-web-app-capable" content="yes"><title>M STORE ERP</title><link rel="preconnect" href="https://fonts.googleapis.com"><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cairo:wght@500;700;800&display=swap">
+<style>
+
+:root{--bg:#F2F2F7;--card:#fff;--tx:#000;--t2:#6C6C70;--sep:#E5E5EA;--bl:#007AFF;--gr:#34C759;--rd:#FF3B30;--gt:#E6F8EA;--rt:#FFECEA;--yt:#FFF3D6;--bt:#E8F1FF;--gx:#1E7B34;--or:#FF9500;--rx:#B3261E;--yx:#7F6000;--nav:rgba(249,249,249,.9);box-sizing:border-box;padding-top:env(safe-area-inset-top,0px)}
+:root[data-theme=dark]{--bg:#000;--card:#1C1C1E;--tx:#fff;--t2:#98989D;--sep:#38383A;--bl:#0A84FF;--gr:#30D158;--rd:#FF453A;--gt:#12301A;--rt:#3A1513;--yt:#3A2E0E;--bt:#10233F;--gx:#30D158;--rx:#FF6961;--yx:#FF9F0A;--or:#FF9F0A;--nav:rgba(28,28,30,.9);color-scheme:dark}
+@media(prefers-color-scheme:dark){:root:not([data-theme=light]){--bg:#000;--card:#1C1C1E;--tx:#fff;--t2:#98989D;--sep:#38383A;--bl:#0A84FF;--gr:#30D158;--rd:#FF453A;--gt:#12301A;--rt:#3A1513;--yt:#3A2E0E;--bt:#10233F;--gx:#30D158;--rx:#FF6961;--yx:#FF9F0A;--or:#FF9F0A;--nav:rgba(28,28,30,.9);color-scheme:dark}}
+*{box-sizing:border-box}html,body{min-height:100%}.br .mo{color:var(--or)}.br .go{color:var(--gr)}body{margin:0;background:var(--bg);color:var(--tx);font:18px/1.5 -apple-system,"SF Pro Text",Cairo,Tahoma,sans-serif;padding-bottom:calc(90px + env(safe-area-inset-bottom,0px))}
+.hb{background:var(--bl);color:#fff;text-align:center;padding:14px 16px 12px}.br{font-size:40px;font-weight:800;letter-spacing:3px;line-height:1.1}.sub{font-size:16px;opacity:.95;margin-top:4px}
+.card{background:var(--card);border-radius:20px;padding:16px;margin:12px 16px}.g2{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin:12px 16px}.g2 .card{margin:0}
+.k small{color:var(--t2);font-size:16px;font-weight:600;display:block}.k b{font-size:30px;font-variant-numeric:tabular-nums}.neg{color:var(--rd)}
+.st{text-align:center;font-size:22px;font-weight:700}.st.g{background:var(--gt);color:var(--gx)}.st.r{background:var(--rt);color:var(--rx)}.st.y{background:var(--yt);color:var(--yx)}
+.bdg{background:var(--bt);color:var(--bl);font-weight:700;text-align:center;padding:12px;border-radius:16px;margin:12px 16px;font-size:19px}
+input,select,textarea{width:100%;font:inherit;font-size:20px;padding:12px;border:1px solid var(--sep);border-radius:14px;background:var(--bt);color:var(--tx)}
+label{display:block;font-weight:600;font-size:17px;margin:12px 0 4px}h2{font-size:26px;margin:4px 0 8px}h3{font-size:22px;margin:0 0 8px}
+button{font:inherit;font-weight:600;font-size:19px;border:0;border-radius:16px;padding:14px;background:var(--bt);color:var(--bl);min-height:52px}
+.pri{background:var(--bl);color:#fff;width:100%;margin-top:14px;min-height:56px}.dng{color:var(--rd);background:var(--rt)}
+.seg{display:flex;background:var(--sep);border-radius:14px;padding:3px;gap:3px}.seg button{flex:1;background:transparent;color:var(--tx);border-radius:12px}.seg .on{background:var(--card);color:var(--bl);box-shadow:0 1px 3px #0002}
+.row{display:flex;align-items:center;gap:10px;padding:12px;border-radius:16px;margin:8px 16px;min-height:56px}.row.w{background:var(--rt)}.row.t{background:var(--gt)}.row.v{opacity:.5;text-decoration:line-through}.row .m{flex:1}.row b{font-size:20px}
+#tb{position:fixed;bottom:0;left:0;right:0;display:flex;background:var(--nav);backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);border-top:1px solid var(--sep);padding-bottom:env(safe-area-inset-bottom,0px);z-index:5}
+#tb button{flex:1;background:none;color:var(--t2);border-radius:0;font-size:13.5px;padding:8px 2px;min-height:60px;line-height:1.3}#tb button span{display:block;font-size:24px}#tb .on{color:var(--bl)}
+#fab{position:fixed;left:20px;bottom:calc(80px + env(safe-area-inset-bottom,0px));width:66px;height:66px;border-radius:50%;background:var(--bl);color:#fff;font-size:38px;padding:0;box-shadow:0 4px 14px #0004;z-index:6}
+.ov{position:fixed;inset:0;background:#0007;z-index:10;display:flex;align-items:flex-end}.toast{position:fixed;top:calc(18px + env(safe-area-inset-top,0px));left:50%;transform:translateX(-50%);background:var(--card);color:var(--tx);padding:12px 24px;border-radius:30px;box-shadow:0 8px 26px rgba(0,0,0,.2);z-index:40;font-weight:700;font-size:18px;opacity:0;transition:opacity .3s,transform .3s;pointer-events:none;white-space:nowrap}.sheet{background:var(--bg);width:100%;max-height:94%;overflow:auto;border-radius:24px 24px 0 0;padding:12px 18px calc(24px + env(safe-area-inset-bottom,0px))}.grab{width:44px;height:5px;background:var(--sep);border-radius:3px;margin:0 auto 10px}
+.spl{position:fixed;inset:0;background:var(--bl);color:#fff;z-index:30;display:flex;flex-direction:column;align-items:center;justify-content:center;font-size:20px}.spl .br{font-size:64px}
+.pg{position:fixed;inset:0;z-index:8;background:linear-gradient(180deg,var(--bt) 0,var(--bg) 340px) no-repeat var(--bg);overflow-y:auto;-webkit-overflow-scrolling:touch}
+.tw{overflow-x:auto;margin:12px 16px}table{border-collapse:collapse;width:100%;font-size:16px;background:var(--card);border-radius:14px}th,td{padding:10px 8px;border-bottom:1px solid var(--sep);text-align:center;white-space:nowrap}th{color:var(--t2)}
+.er{color:var(--rd);font-weight:600;margin-top:8px}small.h{color:var(--t2);font-size:16px;display:block;margin-top:4px}.c2{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+body{font-family:Cairo,-apple-system,"SF Pro Text",Tahoma,sans-serif;background:linear-gradient(180deg,var(--bt) 0,var(--bg) 340px) no-repeat var(--bg);padding-bottom:calc(120px + env(safe-area-inset-bottom,0px))}
+.hb{background:linear-gradient(135deg,#2B9BFF,#0A57D6 55%,#0838A0);border-radius:0 0 34px 34px;padding:24px 16px 22px;box-shadow:0 10px 28px rgba(10,87,214,.35)}
+.br{font-weight:800;letter-spacing:5px;text-shadow:0 3px 10px rgba(0,0,0,.25)}.br::before{content:"💵 ";letter-spacing:0}
+.sub{display:inline-block;background:rgba(255,255,255,.2);padding:5px 16px;border-radius:30px;margin-top:8px;font-weight:600}
+.card{border-radius:24px;box-shadow:0 4px 18px rgba(20,40,90,.09);border:1px solid rgba(120,140,180,.12)}
+.hb+.card{margin-top:-18px;position:relative}
+.g2 .card{border-top:5px solid var(--bl);padding:16px 14px}.g2 .card:nth-child(2){border-color:var(--rd)}.g2 .card:nth-child(4){border-color:var(--gr)}.g2 .card:nth-child(4) b{color:var(--gx)}.g2 .card:nth-child(6){border-color:var(--gr)}
+.g2 .card:nth-child(1) small::before{content:"🏦 "}.g2 .card:nth-child(2) small::before{content:"📱 "}.g2 .card:nth-child(3) small::before{content:"💳 "}.g2 .card:nth-child(4) small::before{content:"💰 "}.g2 .card:nth-child(5) small::before{content:"🔢 "}.g2 .card:nth-child(6) small::before{content:"💎 "}
+.k b{font-size:32px;font-weight:800}
+.st{padding:24px 16px;font-size:24px;font-weight:800;border:0}.st.g{background:linear-gradient(135deg,#34C759,#1E9E45);color:#fff}.st.r{background:linear-gradient(135deg,#FF5A4F,#D70015);color:#fff}.st.y{background:linear-gradient(135deg,#FFD60A,#FF9F0A);color:#4A3200}.st.n{background:var(--card);color:var(--t2)}
+.st.g,.st.r,.st.y{box-shadow:0 8px 22px rgba(0,0,0,.18)}.st.r::before{content:"⚠️ "}.st.y::before{content:"ℹ️ "}.st.n::before{content:"🧮 "}
+.bdg{background:linear-gradient(135deg,var(--bt),var(--card));border:1px solid rgba(10,132,255,.25);border-radius:20px;box-shadow:0 3px 12px rgba(10,132,255,.12)}
+.row{background:var(--card);border-radius:20px;box-shadow:0 3px 12px rgba(20,40,90,.08);border-right:7px solid var(--bl)}.row.w{background:var(--rt);border-color:var(--rd)}.row.t{background:var(--gt);border-color:var(--gr)}
+button{transition:transform .12s,box-shadow .12s;cursor:pointer}button:active{transform:scale(.96)}
+.pri{background:linear-gradient(135deg,#2B9BFF,#0A57D6);box-shadow:0 8px 20px rgba(10,87,214,.35);border-radius:18px}.pri.dng{background:linear-gradient(135deg,#FF5A4F,#D70015);color:#fff;box-shadow:0 8px 20px rgba(215,0,21,.3)}
+.seg{background:rgba(120,140,180,.18);border-radius:18px;padding:4px}.seg button{border-radius:14px}.seg .on{background:var(--bl);color:#fff;box-shadow:0 4px 12px rgba(10,132,255,.4)}#bw.on{background:var(--rd);box-shadow:0 4px 12px rgba(255,59,48,.4)}#bt.on{background:var(--gr);box-shadow:0 4px 12px rgba(52,199,89,.4)}
+input,select,textarea{border-radius:16px;border:1.5px solid rgba(120,140,180,.25)}input:focus,select:focus,textarea:focus{outline:none;border-color:var(--bl);background:var(--card);box-shadow:0 0 0 4px rgba(10,132,255,.2)}
+#tb{left:12px;right:12px;bottom:calc(10px + env(safe-area-inset-bottom,0px));padding-bottom:0;border-radius:28px;border:1px solid var(--sep);box-shadow:0 10px 32px rgba(0,0,0,.2);overflow:hidden}#tb button{min-height:64px;font-weight:700}#tb .on{background:var(--bt);color:var(--bl);border-radius:22px}
+#fab{bottom:calc(104px + env(safe-area-inset-bottom,0px));background:linear-gradient(135deg,#2B9BFF,#0A57D6);box-shadow:0 10px 26px rgba(10,87,214,.5);width:70px;height:70px}
+.sheet{border-radius:30px 30px 0 0;box-shadow:0 -10px 40px rgba(0,0,0,.25)}.ov{backdrop-filter:blur(4px);-webkit-backdrop-filter:blur(4px)}
+.spl{background:radial-gradient(circle at 30% 20%,#47A8FF,#0A57D6 55%,#06307A);font-weight:700}.spl .br{animation:pop 1s ease both}@keyframes pop{from{opacity:0;transform:scale(.7)}to{opacity:1;transform:scale(1)}}
+table{box-shadow:0 4px 18px rgba(20,40,90,.09);border-radius:18px;overflow:hidden}th{background:var(--bt);color:var(--bl);font-weight:700}tr:nth-child(even) td{background:rgba(10,132,255,.05)}
+@media print{#tb,#fab,.ov,button,.sub{display:none!important}body{background:#fff;padding:0;color:#000}.hb{box-shadow:none;border-radius:0;-webkit-print-color-adjust:exact;print-color-adjust:exact}.card,.row,table{box-shadow:none;break-inside:avoid}.tw{overflow:visible}}
+@media screen{#app{margin-right:84px}body{padding-bottom:calc(40px + env(safe-area-inset-bottom,0px))}#tb{left:auto;right:0;top:0;bottom:0;width:84px;flex-direction:column;justify-content:flex-start;gap:6px;border-radius:0;border:0;border-left:1px solid var(--sep);box-shadow:-6px 0 24px rgba(20,40,90,.12);padding:calc(14px + env(safe-area-inset-top,0px)) 6px 14px;overflow-y:auto}#tb button{flex:none;width:100%;min-height:80px;border-radius:20px;font-size:14px}#tb button span{font-size:28px}#tb .on{background:var(--bt);color:var(--bl);box-shadow:inset 0 0 0 2px rgba(10,132,255,.25)}#fab{bottom:calc(24px + env(safe-area-inset-bottom,0px));left:16px}}
+@media screen and (max-width:480px){#app{margin-right:76px}#tb{width:76px}.k b{font-size:24px}.g2{gap:8px;margin:12px 10px}.card{margin-left:10px;margin-right:10px}.row{margin-left:10px;margin-right:10px}input,select,textarea{font-size:18px;padding:10px 8px}.bdg{margin-left:10px;margin-right:10px;font-size:17px}.tw{margin-left:10px;margin-right:10px}}
+.nosc,.nosc body{overflow:hidden}
+@media screen and (max-width:600px){#app{margin-right:0}body{padding-bottom:calc(170px + env(safe-area-inset-bottom,0px))}#tb{left:10px;right:10px;top:auto;bottom:calc(10px + env(safe-area-inset-bottom,0px));width:auto;flex-direction:row;justify-content:flex-start;gap:2px;border-radius:26px;border:1px solid var(--sep);box-shadow:0 10px 32px rgba(0,0,0,.25);padding:4px;overflow-y:visible}#tb button{flex:1;width:auto;min-height:58px;border-radius:20px;font-size:11.5px;padding:6px 0}#tb button span{font-size:22px}#fab{bottom:calc(88px + env(safe-area-inset-bottom,0px));left:14px}}
+
+/* ERP additions */
+.g2 .card small::before{content:none!important}
+.g2 .card{border-top-color:var(--bl)}
+.chps{display:flex;gap:8px;overflow-x:auto;margin:12px 16px;padding-bottom:4px}
+.chp{flex:none;padding:8px 18px;min-height:40px;border-radius:30px;background:var(--card);color:var(--t2);font-size:16px;border:1px solid var(--sep)}
+.chp.on{background:var(--bl);color:#fff;border-color:var(--bl)}
+.itl{display:flex;align-items:center;gap:8px;background:var(--bt);border-radius:14px;padding:8px 12px;margin-top:8px;font-size:17px}
+.itl .m{flex:1}.itl button{min-height:36px;padding:4px 12px;font-size:16px}
+.stt{font-size:14px;font-weight:700;padding:3px 12px;border-radius:20px;background:var(--bt);color:var(--bl)}
+.stt.y{background:var(--yt);color:var(--yx)}.stt.g{background:var(--gt);color:var(--gx)}
+.demo{margin:12px 16px;background:var(--yt);color:var(--yx);border-radius:16px;padding:10px 14px;font-size:15px;font-weight:700;text-align:center}
+.spl{background:linear-gradient(168deg,#47A8FF -10%,#0A57D6 45%,#052B63 110%);font-weight:700}
+.spl .spb{width:92px;height:92px;border-radius:28px;background:rgba(255,255,255,.16);display:flex;align-items:center;justify-content:center;font-size:46px;box-shadow:0 12px 32px rgba(0,0,0,.18),inset 0 1px 0 rgba(255,255,255,.3);backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px);animation:up .5s .05s ease-out both}
+.spl .br{font-size:44px;letter-spacing:6px;margin-top:20px;animation:up .5s .16s ease-out both}
+.spl .br::before{content:''!important}
+.spl .stg{font-size:16px;font-weight:600;opacity:.85;margin-top:8px;animation:up .5s .26s ease-out both}
+@keyframes up{from{opacity:0;transform:translateY(16px)}to{opacity:1;transform:none}}
+.spl.out{transition:opacity .45s ease,transform .45s ease;opacity:0;transform:scale(1.04);pointer-events:none}
+@media print{.pg{position:static;overflow:visible}}
+
+</style><link rel="manifest" href="manifest.webmanifest"><meta name="theme-color" content="#0A57D6"><link rel="apple-touch-icon" href="../apple-touch-icon.png?v=2"><meta name="apple-mobile-web-app-title" content="M STORE ERP"></head><body><div id="app"><div class="spl"><div class="spb">💵</div><div class="br"><span class="mo">M</span> <span class="go">STORE</span></div><div class="stg">نظام إدارة المحل</div></div></div>
+<script>
+const $=s=>document.querySelector(s);
+const escQ=v=>String(v).replace(/&/g,'&amp;').replace(/"/g,'&quot;').replace(/</g,'&lt;');
+const f2=n=>(+n||0).toLocaleString('en-US',{minimumFractionDigits:2,maximumFractionDigits:2});
+const td=()=>{const d=new Date();return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0')};
+const tm=t=>new Date(t).toLocaleTimeString('en-GB',{hour:'2-digit',minute:'2-digit',hour12:true});
+const H=async s=>{try{const b=await crypto.subtle.digest('SHA-256',new TextEncoder().encode('me:'+s));return[...new Uint8Array(b)].map(x=>x.toString(16).padStart(2,'0')).join('')}catch(e){return'p:'+s}};
+const lock=on=>document.documentElement.classList.toggle('nosc',!!on);
+function ovx(){const o=$('#ov');if(o)o.remove();lock(0)}
+function toast(m){let t=document.getElementById('tst');if(!t){t=document.createElement('div');t.id='tst';t.className='toast';document.body.appendChild(t)}t.textContent=m;clearTimeout(t._h);requestAnimationFrame(()=>{t.style.opacity=1;t.style.transform='translateX(-50%) translateY(0)'});t._h=setTimeout(()=>{t.style.opacity=0;t.style.transform='translateX(-50%) translateY(-10px)'},2500)}
+function killSpl(){const sp=document.querySelector('.spl');if(!sp)return;document.body.appendChild(sp);requestAnimationFrame(()=>sp.classList.add('out'));setTimeout(()=>sp.remove(),500)}
+
+const K='merp1';
+let S=null,sess=null,tab='h',err='';
+const save=()=>localStorage.setItem(K,JSON.stringify(S));
+const BR=()=>{const b=(S&&S.brand)||{};return{n:b.n||'M STORE',ic:b.ic||'💵',tg:b.tg!=null?b.tg:'نظام إدارة المحل',cl:b.cl||'#0A57D6'}};
+const brH=()=>{const p=BR().n.trim().split(/\s+/).filter(x=>x);return`<span class="mo">${escQ(p[0]||'')}</span>${p.length>1?' <span class="go">'+escQ(p.slice(1).join(' '))+'</span>':''}`};
+function applyBrand(){const b=BR();document.title=b.n+' ERP';document.documentElement.style.setProperty('--bl',b.cl)}
+
+async function defS(){return{
+brand:{n:'M STORE',ic:'💵',tg:'نظام إدارة المحل',cl:'#0A57D6'},
+branch:'الفرع الرئيسي',
+users:[{u:'admin',n:'أحمد نبيل',h:await H('1234'),role:'owner'},{u:'cashier',n:'كاشير',h:await H('1234'),role:'cashier'}],
+cats:['شواحن','كابلات','سماعات','اكسسوارات موبايل','اكسسوارات لابتوب','قطع غيار','أخرى'],
+prods:[
+{id:1,sku:'CH-001',n:'شاحن سامسونج 25W',cat:'شواحن',cost:180,price:250,stock:12},
+{id:2,sku:'CH-002',n:'هيد شاومي 33W',cat:'شواحن',cost:220,price:320,stock:8},
+{id:3,sku:'CB-001',n:'كابل Type-C أصلي',cat:'كابلات',cost:40,price:75,stock:30},
+{id:4,sku:'CB-002',n:'كابل ايفون لايتنينج',cat:'كابلات',cost:60,price:110,stock:25},
+{id:5,sku:'HP-001',n:'سماعة بلوتوث TWS',cat:'سماعات',cost:150,price:280,stock:6},
+{id:6,sku:'LP-001',n:'ماوس لابتوب لوجيتك',cat:'اكسسوارات لابتوب',cost:200,price:320,stock:4},
+{id:7,sku:'SP-011',n:'شاشة ايفون 11',cat:'قطع غيار',cost:900,price:1200,stock:3},
+{id:8,sku:'CS-001',n:'جراب سيليكون ايفون',cat:'اكسسوارات موبايل',cost:35,price:90,stock:40}],
+custs:[{id:1,n:'أحمد محمد',ph:'01001234567',bal:350},{id:2,n:'محمود سامي',ph:'01119876543',bal:0}],
+sups:[{id:1,n:'شركة النور للاكسسوارات',ph:'01005556677',bal:1200},{id:2,n:'مكتب التقنية للجملة',ph:'01223334455',bal:0}],
+sales:[
+{id:1,no:1,dt:td(),tm:Date.now()-7200000,cust:0,cn:'عميل نقدي',items:[{pid:1,n:'شاحن سامسونج 25W',q:1,p:250,c:180},{pid:3,n:'كابل Type-C أصلي',q:2,p:75,c:40}],tot:400,pay:'كاش',us:'أحمد نبيل'},
+{id:2,no:2,dt:td(),tm:Date.now()-3600000,cust:1,cn:'أحمد محمد',items:[{pid:5,n:'سماعة بلوتوث TWS',q:1,p:280,c:150}],tot:280,pay:'آجل',us:'كاشير'}],
+purs:[{id:1,no:1,dt:td(),sup:1,sn:'شركة النور للاكسسوارات',items:[{pid:3,n:'كابل Type-C أصلي',q:20,c:38}],tot:760,pay:'آجل'}],
+maint:[
+{id:1,no:1,dt:td(),cust:'كريم سيد',dev:'iPhone 11',prob:'تغيير شاشة',pid:7,fee:200,st:'جاري'},
+{id:2,no:2,dt:td(),cust:'منى عادل',dev:'Samsung A52',prob:'تغيير بطارية',pid:null,fee:150,st:'تم'}],
+seq:{s:3,p:2,m:3,pr:9,c:3,sp:3}}}
+
+/* ---------- generic UI ---------- */
+function sh(t,h){const d=document.createElement('div');d.className='ov';d.id='ov';d.innerHTML=`<div class="sheet"><div class="grab"></div><h2>${t}</h2>${h}</div>`;document.body.appendChild(d);lock(1);d.onclick=e=>{if(e.target==d)ovx()}}
+function ask(t,sub,yes,fn){window._ak=fn;const d=document.createElement('div');d.className='ov';d.id='ov';d.innerHTML=`<div class="sheet"><div class="grab"></div><h2 style="text-align:center;margin-top:2px">${t}</h2>${sub?`<small class="h" style="text-align:center;display:block;margin:6px 0 4px">${sub}</small>`:''}<button class="pri dng" onclick="ovx();window._ak()">${yes}</button><button class="pri" style="margin-top:8px" onclick="ovx()">إلغاء</button></div>`;document.body.appendChild(d);lock(1);d.onclick=e=>{if(e.target==d)ovx()}}
+function pg(t,h){const d=document.createElement('div');d.className='pg';d.innerHTML=`<div style="display:flex;align-items:center;gap:10px;padding:16px 16px 0"><button style="width:auto;min-height:44px;padding:8px 18px" onclick="this.parentElement.parentElement.remove()">‹ رجوع</button><h2 style="flex:1;text-align:center;margin:0">${t}</h2><div style="width:80px"></div></div>${h}`;document.body.appendChild(d);return d}
+
+/* ---------- login ---------- */
+function loginV(){killSpl();$('#app').innerHTML=`<div class="pg"><div class="hb" style="padding:52px 20px 40px"><div class="br" style="font-size:48px">${brH()}</div><div class="sub">${escQ(BR().tg)}</div></div><div class="card"><label>اسم المستخدم</label><input id="u" autocomplete="username" placeholder="admin"><label>كلمة السر</label><input id="p" type="password" inputmode="numeric" autocomplete="current-password"><div class="er">${err}</div><button class="pri" onclick="login()">دخول</button><small class="h" style="text-align:center;margin-top:10px">نسخة تجريبية — دخول: admin / 1234</small></div></div>`}
+async function login(){const u=$('#u').value.trim().toLowerCase(),p=$('#p').value,us=S.users.find(x=>x.u==u);
+if(!us||us.off||us.h!=await H(p)){err='اسم المستخدم أو كلمة السر غلط';return loginV()}
+err='';sess={u:us};localStorage.setItem('merp-sess',JSON.stringify({u:us.u,h:us.h}));R();toast('أهلاً بيك يا '+us.n+' 👋')}
+function logout(){ask('تأكيد تسجيل الخروج؟','هتحتاج تسجّل دخولك تاني','تسجيل خروج',()=>{sess=null;localStorage.removeItem('merp-sess');R()})}
+
+/* ---------- helpers ---------- */
+const dayS=dt=>S.sales.filter(x=>x.dt==dt);
+const costOf=v=>v.items.reduce((s,i)=>s+i.c*i.q,0);
+const pName=id=>{const p=S.prods.find(x=>x.id==id);return p?p.n:'-'};
+const sumBal=a=>a.reduce((s,x)=>s+(+x.bal||0),0);
+const stockVal=()=>S.prods.reduce((s,p)=>s+p.cost*p.stock,0);
+
+/* ---------- main render ---------- */
+function R(){killSpl();if(!sess)return loginV();applyBrand();
+const T={h:'الرئيسية',s:'المبيعات',p:'المنتجات',b:'المشتريات',m:'المزيد'};
+const TB=[['h','🏠'],['s','🧾'],['p','📦'],['b','🛒'],['m','⚙️']];
+const FB={s:'nS()',p:'nP()',b:'nB()'};
+$('#app').innerHTML=`<div class="hb"><div class="br">${brH()}</div><div class="sub">${escQ(S.branch)} · ${sess.u.n} · ${sess.u.role=='owner'?'مالك':'كاشير'}</div></div><div id="mn">${V[tab]()}</div>${FB[tab]?`<button id="fab" onclick="${FB[tab]}">+</button>`:''}<div id="tb">${TB.map(([k,i])=>`<button class="${tab==k?'on':''}" onclick="tab='${k}';R()"><span>${i}</span>${T[k]}</button>`).join('')}</div>`}
+
+const V={};
+V.h=function(){const t=td(),s0=dayS(t),st=s0.reduce((s,x)=>s+x.tot,0),pt=S.purs.filter(x=>x.dt==t).reduce((s,x)=>s+x.tot,0),mc=S.maint.filter(x=>x.st=='جاري').length;
+const act=[...S.sales.map(x=>({t:'بيع',d:`فاتورة #${x.no} · ${x.cn}`,a:x.tot,tm:x.tm,c:'t'})),...S.purs.map(x=>({t:'شراء',d:`أمر شراء #${x.no} · ${x.sn}`,a:x.tot,tm:x.tm||0,c:'w'})),...S.maint.map(x=>({t:'صيانة',d:`${x.dev} · ${x.cust}`,a:x.fee,tm:0,c:''}))].sort((a,b)=>b.tm-a.tm).slice(0,6);
+return`<div class="demo">🧪 نسخة تجريبية للتصميم — البيانات دي للعرض بس</div>
+<div class="g2">
+<div class="card k"><small>💰 مبيعات النهاردة</small><b>${f2(st)}</b></div>
+<div class="card k"><small>🛒 مشتريات النهاردة</small><b>${f2(pt)}</b></div>
+<div class="card k"><small>📒 مستحق على العملاء</small><b>${f2(sumBal(S.custs))}</b></div>
+<div class="card k"><small>📦 قيمة المخزون</small><b>${f2(stockVal())}</b></div>
+<div class="card k"><small>🏭 مستحق للموردين</small><b>${f2(sumBal(S.sups))}</b></div>
+<div class="card k"><small>🔧 صيانة جارية</small><b>${mc}</b></div>
+</div>
+<h3 style="margin:14px 16px 0">آخر الحركات</h3>
+${act.map(a=>`<div class="row ${a.c}"><div class="m"><b>${a.t}</b><small class="h">${a.d}</small></div><b>${f2(a.a)}</b></div>`).join('')||'<div class="card st n">مفيش حركات لسه</div>'}`};
+
+V.s=function(){const t=td(),s0=S.sales.slice().sort((a,b)=>b.no-a.no);
+return`<div class="bdg">فواتير النهاردة: ${dayS(t).length} · إجمالي: ${f2(dayS(t).reduce((s,x)=>s+x.tot,0))} ج</div>
+${s0.map(x=>`<div class="row" onclick="vInv(${x.id})"><div class="m"><b>فاتورة #${x.no} · ${escQ(x.cn)}</b><small class="h">${x.items.length} صنف · ${x.pay} · ${x.dt==t?tm(x.tm):x.dt}</small></div><b>${f2(x.tot)}</b></div>`).join('')||'<div class="card st n">مفيش فواتير لسه - دوس + لفتح فاتورة</div>'}`};
+
+let pq='',pc='';
+V.p=function(){const q=pq.toLowerCase(),L=S.prods.filter(p=>(!pc||p.cat==pc)&&(!q||p.n.toLowerCase().includes(q)||p.sku.toLowerCase().includes(q)));
+return`<div style="margin:12px 16px 0"><input id="pq" placeholder="🔍 دوّر بالاسم أو الكود" value="${escQ(pq)}" oninput="pq=this.value;R();this.focus();this.setSelectionRange(this.value.length,this.value.length)"></div>
+<div class="chps"><button class="chp ${!pc?'on':''}" onclick="pc='';R()">الكل</button>${S.cats.map(c=>`<button class="chp ${pc==c?'on':''}" onclick="pc='${c}';R()">${c}</button>`).join('')}</div>
+${L.map(p=>`<div class="row" onclick="eP(${p.id})"><div class="m"><b>${escQ(p.n)}</b><small class="h">${p.sku} · ${p.cat}</small></div><div style="text-align:center"><b>${f2(p.price)}</b><small class="h" style="${p.stock<=3?'color:var(--rd);font-weight:700':''}">المخزون: ${p.stock}</small></div></div>`).join('')||'<div class="card st n">مفيش أصناف مطابقة</div>'}`};
+
+V.b=function(){const L=S.purs.slice().sort((a,b)=>b.no-a.no);
+return`<div class="bdg">أوامر شراء: ${L.length} · إجمالي: ${f2(L.reduce((s,x)=>s+x.tot,0))} ج</div>
+${L.map(x=>`<div class="row w"><div class="m"><b>أمر شراء #${x.no} · ${escQ(x.sn)}</b><small class="h">${x.items.length} صنف · ${x.pay} · ${x.dt}</small></div><b>${f2(x.tot)}</b></div>`).join('')||'<div class="card st n">مفيش مشتريات لسه - دوس + لأمر شراء</div>'}`};
+
+V.m=function(){const ow=sess.u.role=='owner';
+return`${[['👥','العملاء والموردين','أرصدة الآجل والكشوفات','pgC()'],['🔧','الصيانة','تيكيتات الإصلاح وقطع الغيار','pgM()'],['🧮','الحسابات','ملخص مالي كامل','pgA()'],...(ow?[['👤','المستخدمين','الصلاحيات والحسابات','pgU()']]:[]),['⚙️','الإعدادات','هوية المحل والفرع','pgSet()']].map(([i,t,s2,f])=>`<div class="row" onclick="${f}"><span style="font-size:26px">${i}</span><div class="m"><b>${t}</b><small class="h">${s2}</small></div><span style="color:var(--t2)">‹</span></div>`).join('')}
+<div class="card"><button class="pri dng" style="margin:0" onclick="logout()">تسجيل خروج</button></div>`};
+
+/* ---------- sales invoice ---------- */
+function nS(){window._d={items:[],pay:'كاش'};
+sh('فاتورة بيع جديدة',`<label>العميل</label><select id="isc"><option value="0">عميل نقدي</option>${S.custs.map(c=>`<option value="${c.id}">${escQ(c.n)}</option>`).join('')}</select>
+<label>الصنف</label><select id="isp">${S.prods.map(p=>`<option value="${p.id}">${escQ(p.n)} · متاح ${p.stock}</option>`).join('')}</select>
+<div class="c2"><div><label>الكمية</label><input id="isq" type="number" value="1" inputmode="numeric"></div><div><label>سعر البيع</label><input id="iss" type="number" inputmode="decimal" placeholder="0.00"></div></div>
+<button onclick="aI()">＋ إضافة الصنف</button><div id="itm"></div>
+<label>الدفع</label><div class="seg"><button class="on" onclick="pT('كاش',this)">كاش</button><button onclick="pT('آجل',this)">آجل (على العميل)</button></div>
+<div class="bdg" id="itot">الإجمالي: 0.00 ج</div>
+<div class="er" id="ise"></div>
+<button class="pri" onclick="svS()">حفظ الفاتورة</button>`);
+$('#isp').onchange=()=>{const p=S.prods.find(x=>x.id==$('#isp').value);if(p)$('#iss').value=p.price}}
+function pT(v,b){window._d.pay=v;[...b.parentElement.children].forEach(x=>x.classList.toggle('on',x==b))}
+function aI(){const p=S.prods.find(x=>x.id==$('#isp').value),q=+$('#isq').value,pr=+($('#iss').value||p.price);
+if(!(q>0))return;if(q>p.stock)return toast('المخزون مش كفاية - متاح '+p.stock);
+window._d.items.push({pid:p.id,n:p.n,q,p:pr,c:p.cost});rI()}
+function rI(){const d=window._d;$('#itm').innerHTML=d.items.map((i,x)=>`<div class="itl"><div class="m"><b>${escQ(i.n)}</b> <small class="h">× ${i.q} · ${f2(i.p)}</small></div><b>${f2(i.q*i.p)}</b><button onclick="window._d.items.splice(${x},1);rI()">✕</button></div>`).join('');
+$('#itot').textContent='الإجمالي: '+f2(d.items.reduce((s,i)=>s+i.q*i.p,0))+' ج'}
+function svS(){const d=window._d;if(!d.items.length)return $('#ise').textContent='ضيف صنف واحد على الأقل';
+const cid=+$('#isc').value,cn=cid?S.custs.find(x=>x.id==cid).n:'عميل نقدي';
+if(d.pay=='آجل'&&!cid)return $('#ise').textContent='فاتورة آجلة لازم تختار عميل مسجل';
+const tot=d.items.reduce((s,i)=>s+i.q*i.p,0);
+d.items.forEach(i=>{const p=S.prods.find(x=>x.id==i.pid);if(p)p.stock-=i.q});
+S.sales.push({id:Date.now(),no:S.seq.s++,dt:td(),tm:Date.now(),cust:cid,cn,items:d.items,tot,pay:d.pay,us:sess.u.n});
+if(d.pay=='آجل')S.custs.find(x=>x.id==cid).bal+=tot;
+save();ovx();toast('اتحفظت الفاتورة #'+ (S.seq.s-1) +' ✅');R()}
+
+function vInv(id){const v=S.sales.find(x=>x.id==id);if(!v)return;
+pg('فاتورة #'+v.no,`<div class="card" style="text-align:center"><div class="br" style="font-size:30px">${brH()}</div><small class="h">${escQ(S.branch)} · ${escQ(BR().tg)}</small></div>
+<div class="card"><div class="c2"><div><small class="h">رقم الفاتورة</small><b>#${v.no}</b></div><div><small class="h">التاريخ</small><b>${v.dt} ${tm(v.tm)}</b></div></div>
+<small class="h" style="margin-top:8px">العميل</small><b>${escQ(v.cn)}</b><small class="h"> · ${v.pay} · بواسطة ${escQ(v.us)}</small></div>
+<div class="tw"><table><tr><th>الصنف</th><th>الكمية</th><th>السعر</th><th>الإجمالي</th></tr>
+${v.items.map(i=>`<tr><td>${escQ(i.n)}</td><td>${i.q}</td><td>${f2(i.p)}</td><td>${f2(i.q*i.p)}</td></tr>`).join('')}
+<tr><td colspan="3"><b>الإجمالي</b></td><td><b>${f2(v.tot)} ج</b></td></tr></table></div>
+<div class="card"><button class="pri" style="margin:0" onclick="window.print()">🖨️ طباعة / حفظ PDF</button></div>
+<div class="card"><button class="pri dng" style="margin:0" onclick="ovx();voidInv(${v.id})">إلغاء الفاتورة</button></div>`)}
+function voidInv(id){const v=S.sales.find(x=>x.id==id);if(!v)return;
+ask(`إلغاء الفاتورة #${v.no}؟`,'الأصناف هترجع للمخزون والمبلغ هيتشال من حساب العميل لو آجل','إلغاء الفاتورة',()=>{
+v.items.forEach(i=>{const p=S.prods.find(x=>x.id==i.pid);if(p)p.stock+=i.q});
+if(v.pay=='آجل'&&v.cust){const c=S.custs.find(x=>x.id==v.cust);if(c)c.bal-=v.tot}
+S.sales=S.sales.filter(x=>x.id!=id);save();document.querySelectorAll('.pg').forEach(x=>x.remove());toast('اتلغت الفاتورة');R()})}
+
+/* ---------- products ---------- */
+function nP(){sh('صنف جديد',`<label>اسم الصنف</label><input id="pn">
+<label>الفئة</label><select id="pc2">${S.cats.map(c=>`<option>${c}</option>`).join('')}</select>
+<label>الكود (SKU)</label><input id="ps" placeholder="مثال: CH-003">
+<div class="c2"><div><label>سعر التكلفة</label><input id="pco" type="number" inputmode="decimal"></div><div><label>سعر البيع</label><input id="ppr" type="number" inputmode="decimal"></div></div>
+<label>الرصيد الافتتاحي</label><input id="pst" type="number" inputmode="numeric" value="0">
+<div class="er" id="pe"></div>
+<button class="pri" onclick="svP()">حفظ الصنف</button>`)}
+function svP(){const n=$('#pn').value.trim();if(n.length<2)return $('#pe').textContent='اكتب اسم الصنف';
+const sku=$('#ps').value.trim()||'P-'+String(S.seq.pr).padStart(3,'0');
+if(S.prods.some(p=>p.sku==sku))return $('#pe').textContent='الكود ده مستخدم قبل كده';
+S.prods.push({id:S.seq.pr,sku,n,cat:$('#pc2').value,cost:+$('#pco').value||0,price:+$('#ppr').value||0,stock:+$('#pst').value||0});S.seq.pr++;
+save();ovx();toast('اتحفظ الصنف ✅');R()}
+function eP(id){const p=S.prods.find(x=>x.id==id);if(!p)return;
+sh('تعديل صنف',`<label>اسم الصنف</label><input id="pn" value="${escQ(p.n)}">
+<label>الفئة</label><select id="pc2">${S.cats.map(c=>`<option ${c==p.cat?'selected':''}>${c}</option>`).join('')}</select>
+<small class="h">الكود: ${p.sku}</small>
+<div class="c2"><div><label>سعر التكلفة</label><input id="pco" type="number" inputmode="decimal" value="${p.cost}"></div><div><label>سعر البيع</label><input id="ppr" type="number" inputmode="decimal" value="${p.price}"></div></div>
+<label>المخزون الحالي</label><input id="pst" type="number" inputmode="numeric" value="${p.stock}">
+<button class="pri" onclick="upP(${id})">حفظ التعديلات</button>
+<button class="pri dng" style="margin-top:8px" onclick="ovx();delP(${id})">حذف الصنف</button>`)}
+function upP(id){const p=S.prods.find(x=>x.id==id);if(!p)return;
+p.n=$('#pn').value.trim()||p.n;p.cat=$('#pc2').value;p.cost=+$('#pco').value||0;p.price=+$('#ppr').value||0;p.stock=+$('#pst').value||0;
+save();ovx();toast('اتحفظ ✅');R()}
+function delP(id){const p=S.prods.find(x=>x.id==id);if(!p)return;
+ask(`حذف "${p.n}"؟`,'هيتشال من قائمة الأصناف نهائياً','حذف الصنف',()=>{S.prods=S.prods.filter(x=>x.id!=id);save();toast('اتحذف');R()})}
+
+/* ---------- purchases ---------- */
+function nB(){window._d={items:[],pay:'كاش'};
+sh('أمر شراء جديد',`<label>المورد</label><select id="bsc">${S.sups.map(c=>`<option value="${c.id}">${escQ(c.n)}</option>`).join('')}</select>
+<label>الصنف</label><select id="bsp">${S.prods.map(p=>`<option value="${p.id}">${escQ(p.n)} · مخزون ${p.stock}</option>`).join('')}</select>
+<div class="c2"><div><label>الكمية</label><input id="bsq" type="number" value="1" inputmode="numeric"></div><div><label>سعر الشراء</label><input id="bss" type="number" inputmode="decimal" placeholder="0.00"></div></div>
+<button onclick="aB()">＋ إضافة الصنف</button><div id="itm"></div>
+<label>الدفع</label><div class="seg"><button class="on" onclick="pT('كاش',this)">كاش</button><button onclick="pT('آجل',this)">آجل (على المورد)</button></div>
+<div class="bdg" id="itot">الإجمالي: 0.00 ج</div>
+<div class="er" id="bse"></div>
+<button class="pri" onclick="svB()">حفظ أمر الشراء</button>`);
+$('#bsp').onchange=()=>{const p=S.prods.find(x=>x.id==$('#bsp').value);if(p)$('#bss').value=p.cost}}
+function aB(){const p=S.prods.find(x=>x.id==$('#bsp').value),q=+$('#bsq').value,c=+($('#bss').value||p.cost);
+if(!(q>0)||!(c>0))return toast('اكتب كمية وسعر صح');
+window._d.items.push({pid:p.id,n:p.n,q,c});rI()}
+function svB(){const d=window._d;if(!d.items.length)return $('#bse').textContent='ضيف صنف واحد على الأقل';
+const sid=+$('#bsc').value,sn=S.sups.find(x=>x.id==sid).n,tot=d.items.reduce((s,i)=>s+i.q*i.c,0);
+d.items.forEach(i=>{const p=S.prods.find(x=>x.id==i.pid);if(p){p.stock+=i.q;p.cost=i.c}});
+S.purs.push({id:Date.now(),no:S.seq.p++,dt:td(),sup:sid,sn,items:d.items,tot,pay:d.pay});
+if(d.pay=='آجل')S.sups.find(x=>x.id==sid).bal+=tot;
+save();ovx();toast('اتحفظ أمر الشراء #'+(S.seq.p-1)+' ✅');R()}
+
+/* ---------- customers & suppliers ---------- */
+let csT='c';
+function pgC(){const L=csT=='c'?S.custs:S.sups,t=csT=='c'?'عميل':'مورد';
+pg('العملاء والموردين',`<div style="margin:12px 16px 0"><div class="seg"><button class="${csT=='c'?'on':''}" onclick="csT='c';document.querySelectorAll('.pg').forEach(x=>x.remove());pgC()">العملاء</button><button class="${csT=='s'?'on':''}" onclick="csT='s';document.querySelectorAll('.pg').forEach(x=>x.remove());pgC()">الموردين</button></div></div>
+<div class="bdg">${csT=='c'?'إجمالي مستحق على العملاء':'إجمالي مستحق للموردين'}: ${f2(sumBal(L))} ج</div>
+${L.map(x=>`<div class="row"><div class="m"><b>${escQ(x.n)}</b><small class="h">${x.ph||''}</small></div><div style="text-align:center"><b class="${x.bal>0?'neg':''}">${f2(x.bal)}</b><small class="h">${x.bal>0?(csT=='c'?'عليه':'له'):'صفر'}</small></div></div>`).join('')}
+<div class="card"><h3>إضافة ${t}</h3><label>الاسم</label><input id="cn2"><label>الموبايل</label><input id="cph" inputmode="tel"><button class="pri" onclick="svC('${csT}')">حفظ</button></div>`)}
+function svC(t){const n=$('#cn2').value.trim();if(n.length<2)return toast('اكتب الاسم');
+(t=='c'?S.custs:S.sups).push({id:t=='c'?S.seq.c++:S.seq.sp++,n,ph:$('#cph').value.trim(),bal:0});
+save();document.querySelectorAll('.pg').forEach(x=>x.remove());pgC();toast('اتحفظ ✅')}
+
+/* ---------- maintenance ---------- */
+function pgM(){pg('الصيانة',`<div class="bdg">تيكيتات جارية: ${S.maint.filter(x=>x.st=='جاري').length}</div>
+${S.maint.slice().sort((a,b)=>b.no-a.no).map(m=>{const pt=m.pid?pName(m.pid):'بدون قطعة';return`<div class="row"><div class="m"><b>${escQ(m.dev)} · ${escQ(m.cust)}</b><small class="h">${m.prob} · ${pt} · أجرة ${f2(m.fee)}</small></div><div style="text-align:center"><span class="stt ${m.st=='جاري'?'y':'g'}">${m.st}</span>${m.st!='مستلم'?`<br><button style="margin-top:6px;min-height:36px;padding:4px 14px;font-size:15px" onclick="adM(${m.id})">${m.st=='جاري'?'تم الإصلاح':'تسليم'}</button>`:''}</div></div>`}).join('')}
+<div class="card"><h3>تيكيت جديد</h3><label>اسم العميل</label><input id="mc"><label>الجهاز</label><input id="md" placeholder="مثال: iPhone 12"><label>العطل</label><input id="mp2">
+<label>قطعة الغيار (بتتخصم من المخزون)</label><select id="mpt"><option value="0">بدون قطعة</option>${S.prods.filter(p=>p.stock>0).map(p=>`<option value="${p.id}">${escQ(p.n)} · متاح ${p.stock}</option>`).join('')}</select>
+<label>أجرة الإصلاح</label><input id="mf" type="number" inputmode="decimal" value="0">
+<div class="er" id="me2"></div><button class="pri" onclick="svM()">حفظ التيكيت</button></div>`)}
+function svM(){const c=$('#mc').value.trim(),dv=$('#md').value.trim();if(c.length<2||dv.length<2)return $('#me2').textContent='اكتب اسم العميل والجهاز';
+const pid=+$('#mpt').value||null;if(pid){const p=S.prods.find(x=>x.id==pid);if(p.stock<1)return $('#me2').textContent='القطعة مش متاحة في المخزون';p.stock--}
+S.maint.push({id:Date.now(),no:S.seq.m++,dt:td(),cust:c,dev:dv,prob:$('#mp2').value.trim(),pid,fee:+$('#mf').value||0,st:'جاري'});
+save();document.querySelectorAll('.pg').forEach(x=>x.remove());pgM();toast('اتحفظ التيكيت ✅')}
+function adM(id){const m=S.maint.find(x=>x.id==id);if(!m)return;m.st=m.st=='جاري'?'تم':'مستلم';save();document.querySelectorAll('.pg').forEach(x=>x.remove());pgM()}
+
+/* ---------- accounts ---------- */
+function pgA(){const st=S.sales.reduce((s,x)=>s+x.tot,0),sc=S.sales.reduce((s,x)=>s+costOf(x),0),pt=S.purs.reduce((s,x)=>s+x.tot,0),mf=S.maint.filter(m=>m.st!='ملغي').reduce((s,m)=>s+m.fee,0);
+pg('الحسابات',`<div class="g2">
+<div class="card k"><small>🧾 إجمالي المبيعات</small><b>${f2(st)}</b></div>
+<div class="card k"><small>💵 أجور صيانة</small><b>${f2(mf)}</b></div>
+<div class="card k"><small>📉 تكلفة البضاعة المباعة</small><b>${f2(sc)}</b></div>
+<div class="card k"><small>⭐ مجمل الربح</small><b>${f2(st-sc+mf)}</b></div>
+<div class="card k"><small>🛒 إجمالي المشتريات</small><b>${f2(pt)}</b></div>
+<div class="card k"><small>📦 قيمة المخزون</small><b>${f2(stockVal())}</b></div>
+<div class="card k"><small>📒 مستحق على العملاء</small><b>${f2(sumBal(S.custs))}</b></div>
+<div class="card k"><small>🏭 مستحق للموردين</small><b>${f2(sumBal(S.sups))}</b></div>
+</div>
+<small class="h" style="margin:0 16px;display:block;text-align:center">من غير ضرايب (VAT) دلوقتي — حسب إعدادات المرحلة الأولى</small>`)}
+
+/* ---------- users ---------- */
+function pgU(){if(sess.u.role!='owner')return;
+pg('المستخدمين',`${S.users.map((x,i)=>`<div class="row"><div class="m"><b>${escQ(x.n)}</b><small class="h">${x.u} · ${x.role=='owner'?'مالك':'كاشير'}${x.off?' · موقوف':''}</small></div>${i?`<button onclick="tgU2(${i})">${x.off?'تفعيل':'إيقاف'}</button>`:''}</div>`).join('')}
+<div class="card"><h3>مستخدم جديد</h3><label>الاسم</label><input id="un"><label>اسم المستخدم (للدخول)</label><input id="uu" style="direction:ltr"><label>كلمة السر</label><input id="up" type="password" inputmode="numeric">
+<label>الصلاحية</label><div class="seg" id="ur"><button class="on" data-r="cashier">كاشير</button><button data-r="owner">مالك</button></div>
+<div class="er" id="ue"></div><button class="pri" onclick="svU()">إضافة المستخدم</button></div>`);
+$('#ur').onclick=e=>{if(e.target.dataset.r)[...$('#ur').children].forEach(b=>b.classList.toggle('on',b==e.target))}}
+async function svU(){const n=$('#un').value.trim(),u=$('#uu').value.trim().toLowerCase(),p=$('#up').value;
+if(n.length<2||u.length<2||p.length<4)return $('#ue').textContent='اكتب الاسم واسم المستخدم وكلمة سر 4 خانات على الأقل';
+if(S.users.some(x=>x.u==u))return $('#ue').textContent='اسم المستخدم ده موجود';
+const role=[...$('#ur').children].find(b=>b.classList.contains('on')).dataset.r;
+S.users.push({u,n,h:await H(p),role});save();document.querySelectorAll('.pg').forEach(x=>x.remove());pgU();toast('اتحفظ ✅')}
+function tgU2(i){S.users[i].off=!S.users[i].off;save();document.querySelectorAll('.pg').forEach(x=>x.remove());pgU()}
+
+/* ---------- settings ---------- */
+function pgSet(){const b=BR();
+pg('الإعدادات',`<div class="card"><h3>🏪 الفرع</h3><label>اسم الفرع</label><input id="brn2" value="${escQ(S.branch)}"><small class="h">النظام متصمم يدعم فروع متعددة لاحقاً</small></div>
+<div class="card"><h3>🎨 هوية التطبيق</h3><label>اسم المحل</label><input id="brn" value="${escQ(b.n)}"><label>الأيقونة</label><input id="bric" value="${escQ(b.ic)}" maxlength="4"><label>الوصف</label><input id="brtg" value="${escQ(b.tg)}"><label>اللون</label><input id="brcl" type="color" value="${b.cl}" style="height:56px;padding:4px"><button class="pri" onclick="brSave()">حفظ الهوية</button></div>
+<div class="card"><h3>🧪 بيانات تجريبية</h3><small class="h">النسخة دي للتصميم والتجربة بس — البيانات على الجهاز ده ومش متزامنة</small><button class="pri dng" onclick="ask('مسح البيانات التجريبية؟','هترجع البيانات الافتراضية من الأول','مسح وإعادة',async()=>{localStorage.removeItem(K);S=await defS();save();R();toast('اتعملت إعادة الضبط')})">إعادة ضبط البيانات</button></div>`)}
+function brSave(){S.branch=$('#brn2').value.trim()||'الفرع الرئيسي';S.brand={n:$('#brn').value.trim()||'M STORE',ic:$('#bric').value.trim()||'💵',tg:$('#brtg').value.trim(),cl:$('#brcl').value||'#0A57D6'};save();document.querySelectorAll('.pg').forEach(x=>x.remove());R();toast('اتحفظت الهوية ✅')}
+
+/* ---------- boot ---------- */
+async function init(){
+const raw=localStorage.getItem('merp1');S=raw?JSON.parse(raw):await defS();if(!raw)save();
+applyBrand();
+const sv0=localStorage.getItem('merp-sess');if(sv0){try{const q=JSON.parse(sv0),us=S.users.find(x=>x.u==q.u);if(us&&!us.off&&us.h==q.h)sess={u:us};else localStorage.removeItem('merp-sess')}catch(e){localStorage.removeItem('merp-sess')}}
+setTimeout(R,900)}
+init();
+</script></body></html>
