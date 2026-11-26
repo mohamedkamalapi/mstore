@@ -159,10 +159,11 @@ save();document.querySelectorAll('.pg').forEach(x=>x.remove());R();toast('اتض
 
 /* ---------- main render ---------- */
 function R(){killSpl();if(!sess)return loginV();applyBrand();
-const T={h:'الرئيسية',s:'المبيعات',p:'المنتجات',b:'المشتريات',g:'الجرد',m:'المزيد'};
-const TB=[['h','🏠'],['s','🧾'],['p','📦'],['b','🛒'],['g','🧮'],['m','⚙️']];
-const FB={s:'nS()',p:'nP()',b:'nB()'};
+const T={h:'الرئيسية',s:'المبيعات',c:'الكاش',p:'المنتجات',b:'المشتريات',g:'الجرد',m:'المزيد'};
+const TB=[['h','🏠'],['s','🧾'],['c','💵'],['p','📦'],['b','🛒'],['g','🧮'],['m','⚙️']];
+const FB={s:'nS()',p:'nP()',b:'nB()',c:'cSh()'};
 $('#app').innerHTML=`<div class="hb"><div class="br">${brH()}</div><div class="sub">${escQ(S.branch)} · ${sess.u.n} · ${sess.u.role=='owner'?'مالك':'كاشير'}</div></div><div id="mn">${V[tab]()}</div>${FB[tab]?`<button id="fab" onclick="${FB[tab]}">+</button>`:''}<div id="tb">${TB.map(([k,i])=>`<button class="${tab==k?'on':''}" onclick="tab='${k}';R()"><span>${i}</span>${T[k]}</button>`).join('')}</div>`}
+if(SK&&!CS)cBoot()
 
 const V={};
 V.h=function(){const t=td(),s0=dayS(t),st=s0.reduce((s,x)=>s+x.tot,0),pt=S.purs.filter(x=>x.dt==t).reduce((s,x)=>s+x.tot,0),mc=S.maint.filter(x=>x.st=='جاري').length;
@@ -177,7 +178,8 @@ return`<div class="demo">🧪 نسخة تجريبية للتصميم — الب�
 <div class="card k"><small>🔧 صيانة جارية</small><b>${mc}</b></div>
 </div>
 <h3 style="margin:14px 16px 0">آخر الحركات</h3>
-${act.map(a=>`<div class="row ${a.c}"><div class="m"><b>${a.t}</b><small class="h">${a.d}</small></div><b>${f2(a.a)}</b></div>`).join('')||'<div class="card st n">مفيش حركات لسه</div>'}`};
+${act.map(a=>`<div class="row ${a.c}"><div class="m"><b>${a.t}</b><small class="h">${a.d}</small></div><b>${f2(a.a)}</b></div>`).join('')||'<div class="card st n">مفيش حركات لسه</div>'}
+${SK&&CS?(()=>{const r=cFig(td());return`<div class="card" style="cursor:pointer" onclick="tab='c';R()"><h3>💵 الكاش النهاردة</h3><div style="display:grid;grid-template-columns:repeat(4,1fr);gap:8px;text-align:center"><div><small class="h">الدرج</small><br><b>${f2(r.has?r.cash:r.exp)}</b></div><div><small class="h">فودافون</small><br><b>${f2(r.v)}</b></div><div><small class="h">انستا</small><br><b>${f2(r.i)}</b></div><div><small class="h">العمولات</small><br><b>${f2(r.cm)}</b></div></div></div>`})():''}`};
 
 V.s=function(){const t=td(),s0=S.sales.slice().sort((a,b)=>b.no-a.no);
 return`<div class="bdg">فواتير النهاردة: ${dayS(t).length} · إجمالي: ${f2(dayS(t).reduce((s,x)=>s+x.tot,0))} ج</div>
@@ -380,14 +382,103 @@ function tgU2(i){S.users[i].off=!S.users[i].off;save();document.querySelectorAll
 function pgSet(){const b=BR();
 pg('الإعدادات',`<div class="card"><h3>🏪 الفرع</h3><label>اسم الفرع</label><input id="brn2" value="${escQ(S.branch)}"><small class="h">النظام متصمم يدعم فروع متعددة لاحقاً</small></div>
 <div class="card"><h3>🎨 هوية التطبيق</h3><label>اسم المحل</label><input id="brn" value="${escQ(b.n)}"><label>الأيقونة</label><input id="bric" value="${escQ(b.ic)}" maxlength="4"><label>الوصف</label><input id="brtg" value="${escQ(b.tg)}"><label>اللون</label><input id="brcl" type="color" value="${b.cl}" style="height:56px;padding:4px"><button class="pri" onclick="brSave()">حفظ الهوية</button></div>
+${sess.u.role=='owner'?`<div class="card"><h3>💵 اعدادات الكاش</h3>${CS?`<small class="h">التعديل هنا بينطبق على كل الأجهزة (تطبيق الكاش والـ ERP) - نفس البيانات بالظبط</small>
+<label>أرصدة البداية (أول مرة): الدرج | فودافون | انستا</label><div style="display:grid;grid-template-columns:repeat(3,1fr);gap:6px">${['d','v','i'].map(k2=>`<input type="number" value="${CS.base[k2]}" onchange="CS.base.${k2}=+this.value||0;cSv();toast('اتحفظ ✅')">`).join('')}</div>
+<label>جدول العمولات: من | إلى | سحب | تحويل</label>${CS.tiers.map((t2,j)=>`<div style="display:grid;grid-template-columns:repeat(4,1fr);gap:6px;margin:6px 0">${t2.map((v2,k2)=>`<input type="number" value="${v2}" onchange="CS.tiers[${j}][${k2}]=+this.value;cSv()">`).join('')}</div>`).join('')}
+<label>بعد آخر شريحة: كل (جنيه) | عمولة سحب | عمولة تحويل</label><div style="display:grid;grid-template-columns:repeat(3,1fr);gap:6px">${['s','w','t'].map(k2=>`<input type="number" value="${CS.block[k2]}" onchange="CS.block.${k2}=+this.value;cSv()">`).join('')}</div>
+<small class="h" style="display:block;margin-top:8px">مستخدمين تطبيق الكاش بيتظبطوا من تطبيق الكاش نفسه.</small>`:'<small class="h">اربط الكاش من تاب الكاش الأول عشان تظهر الإعدادات هنا.</small>'}</div>`:''}
 <div class="card"><h3>🧪 بيانات تجريبية</h3><small class="h">النسخة دي للتصميم والتجربة بس — البيانات على الجهاز ده ومش متزامنة</small><button class="pri dng" onclick="ask('مسح البيانات التجريبية؟','هترجع البيانات الافتراضية من الأول','مسح وإعادة',async()=>{localStorage.removeItem(K);S=await defS();save();R();toast('اتعملت إعادة الضبط')})">إعادة ضبط البيانات</button></div>`)}
 function brSave(){S.branch=$('#brn2').value.trim()||'الفرع الرئيسي';S.brand={n:$('#brn').value.trim()||'M STORE',ic:$('#bric').value.trim()||'💵',tg:$('#brtg').value.trim(),cl:$('#brcl').value||'#0A57D6'};save();document.querySelectorAll('.pg').forEach(x=>x.remove());R();toast('اتحفظت الهوية ✅')}
+
+/* ---------- الكاش (نفس بيانات تطبيق الكاش المستقل - نفس الـ Supabase blob) ---------- */
+const SB={url:'https://jkzdylpxbmpsypbxugau.supabase.co',key:'sb_publishable_p3KXuvsg7Nz75GXqt9iqCg_pEudnSgs'};
+const CDEN=[200,100,50,20,10,5,1];
+let SK=localStorage.getItem('ms-key')||'',CS=null,cDirty=0,cTS='',cTimer=0,cLd=0,cvd=td(),cF={};
+const cN=n=>`<span class="${n<0?'neg':''}">${f2(n)}</span>`;
+const cRO=()=>!!(sess&&sess.u&&sess.u.role=='owner'&&CS&&CS.cur);
+const chdr=()=>({'apikey':SB.key,'Authorization':'Bearer '+SB.key,'Content-Type':'application/json','x-ms-key':SK});
+async function cGet(){const r=await fetch(SB.url+'/rest/v1/mstore_state?id=eq.state&select=data,updated_at',{headers:chdr()});if(!r.ok)return null;const j=await r.json();return j[0]||null}
+async function cSbCheck(){try{const r=await fetch(SB.url+'/rest/v1/mstore_settings?select=id',{headers:chdr()});if(!r.ok)return false;const j=await r.json();return j.length>0}catch(e){return false}}
+async function cPush(){if(!SK||!CS)return;const ts=new Date().toISOString();let res='net';
+try{const r=await fetch(SB.url+'/rest/v1/rpc/mstore_push',{method:'POST',headers:chdr(),body:JSON.stringify({p_data:JSON.parse(JSON.stringify(CS)),p_role:sess?sess.u.role:'owner',p_base:cTS||null,p_ts:ts})});res=r.ok?await r.json():'net'}catch(e){}
+if(res=='ok'){cTS=ts;cDirty=0}else if(res=='merged'){cDirty=0;cPull()}else if(res=='stale'){cDirty=0;cPull();alert('جهاز تاني عدّل البيانات - اتعملت مزامنة')}else{cTimer=setTimeout(cPush,5000)}}
+async function cPull(){if(!SK||cDirty||!CS)return;try{const g=await cGet();if(g&&g.updated_at>cTS){CS=g.data;cTS=g.updated_at;if(sess&&!document.getElementById('ov')&&!document.querySelector('.pg')&&(tab=='c'||tab=='h')&&!(document.activeElement&&document.activeElement.tagName=='INPUT'))R()}}catch(e){}}
+function cSv(){cDirty=1;clearTimeout(cTimer);cTimer=setTimeout(cPush,700)}
+async function cBoot(){if(cLd||!SK||CS)return;cLd=1;try{const g=await cGet();if(g){CS=g.data;cTS=g.updated_at}}catch(e){}cLd=0;if(sess&&(tab=='c'||tab=='h'))R()}
+async function cPair(){const c=$('#skc').value.trim();if(c.length<6){$('#ske').textContent='الكود 6 خانات على الأقل';return}
+SK=c;let ok=false;try{ok=await cSbCheck()}catch(e){}
+if(!ok){SK='';$('#ske').textContent='الكود مش صح أو مفيش نت';return}
+localStorage.setItem('ms-key',c);CS=null;cLd=0;cBoot();R();toast('اتربط الكاش ✅')}
+function cComm(t,A){if(!(A>0))return null;const k=t=='w'?2:3,T=CS.tiers,mx=Math.max(...T.map(x=>x[1])),f=r=>{const x=T.find(x=>r>=x[0]&&r<=x[1]);return x?+x[k]:null};
+if(A<=mx)return f(A);const B=CS.block,bl=Math.floor(A/B.s),rem=A%B.s,rf=rem>0?f(rem):0;return rf==null?null:bl*(t=='w'?+B.w:+B.t)+rf}
+function cFx(o){const e=o.ci=='t'||(!o.ci&&o.t=='w'),w=o.t=='w';return{d:(w?-o.a:o.a)+(e?0:o.c),l:(w?o.a:-o.a)+(e?o.c:0)}}
+function cRun(dt,c){let d=c.d,v=c.v,i=c.i,cm=0,n=0;for(const o of CS.ops)if(o.dt==dt&&!o.void){const f=cFx(o);d+=f.d;if(o.ch=='v')v+=f.l;else i+=f.l;cm+=o.c;n++}
+for(const q of CS.liq||[])if(q.dt==dt&&!q.void)d+=q.a;const ct=CS.counts[dt]||{},has=Object.values(ct).some(x=>x!==''&&x!=null),cash=CDEN.reduce((s,k)=>s+k*(+ct[k]||0),0);return{exp:d,v,i,cm,n,has,cash,diff:has?cash-d:0,cd:has?cash:d}}
+const cOV=o=>({d:+o.d||0,v:+o.v||0,i:+o.i||0});
+function cFig(date){let c={...CS.base};const O=CS.open||{},ds=[...new Set([...CS.ops.map(o=>o.dt),...Object.keys(CS.counts),...Object.keys(O),...(CS.liq||[]).map(q=>q.dt)])].sort();for(const x of ds){if(x>=date)break;if(O[x])c=cOV(O[x]);const r=cRun(x,c);c={d:r.cd,v:r.v,i:r.i}}const m=!!O[date];if(m)c=cOV(O[date]);return{open:c,man:m,...cRun(date,c)}}
+function cStat(r){if(!r.has)return['n','لسه الجرد ما اتعملش'];if(Math.abs(r.diff)<.005)return['g','✅ مطابق - الدرج مظبوط'];return r.diff<0?['r','عجز '+f2(-r.diff)+' ج في الدرج']:['y','زيادة '+f2(r.diff)+' ج في الدرج']}
+const cOWD=()=>{const m={};for(const q of CS.liq||[])if(!q.void)m[q.who]=(m[q.who]||0)+q.a;return m},cOT=()=>Object.values(cOWD()).reduce((s,x)=>s+x,0);
+const cDayO=dt=>CS.ops.filter(o=>o.dt==dt),cNxt=dt=>Math.max(0,...cDayO(dt).map(o=>o.no))+1;
+
+V.c=function(){
+if(!SK)return`<div class="card"><h3>💵 الكاش</h3><small class="h">الكاش هنا هو نفس كاش تطبيق M STORE المستقل: نفس الدرج ونفس العمليات ونفس الأرقام. اربط الجهاز ده بكود المحل مرة واحدة وهيفضل متزامن.</small><label>كود المحل</label><input id="skc" type="password" autocomplete="off" placeholder="نفس كود تطبيق الكاش"><div class="er" id="ske"></div><button class="pri" onclick="cPair()">ربط الكاش</button><small class="h" style="display:block;margin-top:8px">لسه معملتش كود؟ افتح تطبيق الكاش الأول واعمل «فتح محل جديد» من هناك.</small></div>`;
+if(!CS)return'<div class="card st n">⏳ بيحمّل بيانات الكاش...</div>';
+const r=cFig(cvd),[k,t]=cStat(r),ro=cRO(),a=cDayO(cvd),last=a.slice(-1)[0],ct=CS.counts[cvd]||{};
+return`<div class="bdg">${cDirty?'⏫ بيرفع التعديلات...':'✅ متزامن'} · العملية الجاية #${cNxt(td())}${last&&cvd==td()?` · آخر عملية #${last.no} · ${tm(last.tm)}`:''}</div>
+<div class="card"><label style="margin:0">اليوم</label><input type="date" value="${cvd}" onchange="cvd=this.value||td();R()"></div>
+<div class="card"><h3>🌅 الرصيد الافتتاحي لليوم</h3><small class="h" style="margin:-4px 0 8px">${r.man?'مكتوب يدوي لليوم ده':'جاي لوحده من قفلة اليوم اللي قبله'}</small><div style="display:grid;grid-template-columns:repeat(3,1fr);gap:8px">${[['d','الدرج'],['v','فودافون'],['i','انستا']].map(([k2,n2])=>`<div><label style="margin:0;font-size:16px">${n2}</label><input type="number" inputmode="decimal" value="${r.open[k2]}" onchange="cSo('${k2}',this.value)" ${ro?'disabled':''}></div>`).join('')}</div>${r.man&&!ro?`<button style="width:100%;margin-top:10px" onclick="cRo()">رجّعه تلقائي</button>`:''}</div>
+<div class="card st ${k}">${t}</div>
+<div class="g2">
+<div class="card k"><small>الدرج المتوقع</small><b>${cN(r.exp)}</b></div>
+<div class="card k"><small>فودافون كاش</small><b>${cN(r.v)}</b></div>
+<div class="card k"><small>انستا باي</small><b>${cN(r.i)}</b></div>
+<div class="card k"><small>العمولات</small><b>${f2(r.cm)}</b></div>
+<div class="card k"><small>عدد العمليات</small><b>${r.n}</b></div>
+<div class="card k"><small>صافي الفلوس (بعد السيولة)</small><b>${cN((r.has?r.cash:r.exp)+r.v+r.i-cOT())}</b></div>
+</div>
+${cShiftC()}
+<h3 style="margin:14px 16px 0">عمليات اليوم</h3>
+${a.length?a.slice().reverse().map(o=>`<div class="row ${o.t} ${o.void?'v':''}"><div><b>#${o.no}</b><br><small class="h">${tm(o.tm)}</small></div><div class="m"><b>${o.t=='w'?'سحب':'تحويل'} ${f2(o.a)}</b><small class="h">${o.ch=='v'?'فودافون':'انستا'} · عمولة ${f2(o.c)} · ${escQ(o.ow)}${o.sh?' · وردية '+o.sh:''}${o.note?' · '+escQ(o.note):''}</small></div>${o.void||ro?'':`<button class="dng" onclick="cVo(${o.id})">إلغاء</button>`}</div>`).join(''):'<div class="card st n">مفيش عمليات لسه - دوس + وسجّل أول عملية</div>'}
+<h3 style="margin:14px 16px 0">جرد الدرج - ${cvd}</h3>
+<div class="card">${CDEN.map(k2=>`<div class="c2" style="margin:6px 0;align-items:center"><b>${k2} ج</b><input type="number" inputmode="numeric" min="0" value="${ct[k2]??''}" placeholder="عدد الورق" oninput="cSc(${k2},this.value)" ${ro?'disabled':''}></div>`).join('')}<div class="card k" style="margin:8px 0 0"><small>إجمالي الجرد</small><b id="ctot">${f2(r.cash)}</b></div></div>
+${cLQcard(ro)}`};
+
+function cShiftC(){const c=CS.cur;
+if(!c){return sess.u.role=='owner'?`<div class="card st n">🕐 مفيش وردية مفتوحة دلوقتي - لما الكاشير يفتح وردية هتظهر تفاصيلها هنا</div>`:`<div class="card"><h3>🕐 فتح وردية جديدة</h3><label>اسم صاحب الوردية</label><input id="nsn" list="nsl" placeholder="مين شغال في الوردية دي؟"><datalist id="nsl">${CS.names.map(x=>`<option value="${x}">`).join('')}</datalist><div class="er" id="nse"></div><button class="pri" onclick="cNSh()">فتح الوردية</button></div>`}
+const a2=CS.ops.filter(o=>o.dt==c.date&&o.sh==c.no&&!o.void),cm2=a2.reduce((s2,o)=>s2+o.c,0);
+return`<div class="card"><h3>🔒 الوردية #${c.no} · ${escQ(c.owner)}</h3><div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:6px"><div class="card k" style="margin:0"><small>عمليات الوردية</small><b>${a2.length}</b></div><div class="card k" style="margin:0"><small>عمولات الوردية</small><b>${f2(cm2)}</b></div></div>${sess.u.role=='owner'?'<div class="bdg" style="margin-top:10px">👁️ مشاهدة فقط - الكاشير هو اللي يقفل الوردية من جهازه</div>':`<button class="pri" style="margin-top:10px" onclick="cCs()">قفل الوردية</button>`}</div>`}
+
+function cLQcard(ro){const m=cOWD(),kk=Object.keys(m).filter(x=>Math.abs(m[x])>.004);
+return`<div class="card"><h3>🤝 السيولة (فلوس مستلفة)</h3><small class="h" style="margin:-4px 0 8px">لما الدرج يخلص وتاخد فلوس من حد، سجّلها هنا. مش بتتحسب عملية ولا عمولة.</small>${kk.length?kk.map(x=>`<div class="row" style="background:var(--bt);margin:6px 0"><div class="m"><b>${escQ(x)}</b><small class="h">علينا له</small></div><b>${cN(m[x])}</b></div>`).join('')+`<div class="row" style="margin:6px 0"><b class="m">إجمالي علينا</b><b>${cN(cOT())}</b></div>`:'<small class="h">مفيش سيولة مستلفة دلوقتي</small>'}${ro?'':`<div class="c2" style="margin-top:10px"><button onclick="cLq(1)">⬇️ استلمت سيولة</button><button onclick="cLq(-1)">⬆️ رجّعت سيولة</button></div>`}${(CS.liq||[]).filter(q=>q.dt==cvd&&!q.void).map(q=>`<div class="row" style="margin:6px 0;background:${q.a>0?'var(--gt)':'var(--rt)'}"><div class="m"><b>${q.a>0?'استلام':'سداد'} ${f2(Math.abs(q.a))}</b><small class="h">${escQ(q.who)} · ${tm(q.tm)}${q.note?' · '+escQ(q.note):''}</small></div>${ro?'':`<button class="dng" onclick="cVl(${q.id})">إلغاء</button>`}</div>`).join('')}</div>`}
+
+function cSo(k,v){if(cRO())return alert('الوردية مفتوحة - وضع المشاهدة فقط');CS.open=CS.open||{};const r=cFig(cvd).open;CS.open[cvd]={d:r.d,v:r.v,i:r.i,[k]:+v||0};cSv();R()}
+function cRo(){if(cRO())return;delete CS.open[cvd];cSv();R()}
+function cSc(k,v){if(cRO())return;(CS.counts[cvd]=CS.counts[cvd]||{})[k]=v;cSv();const ct=CS.counts[cvd],el=document.getElementById('ctot');if(el)el.textContent=f2(CDEN.reduce((s2,k2)=>s2+k2*(+ct[k2]||0),0))}
+function cVo(id){if(cRO())return alert('الوردية مفتوحة - وضع المشاهدة فقط');const o=CS.ops.find(x=>x.id==id);if(o)ask(`إلغاء العملية #${o.no}؟`,'هتتشال من الحسابات ومفيش تراجع','إلغاء العملية',()=>{o.void=1;cSv();R()})}
+function cNSh(){const n=$('#nsn').value.trim().replace(/\s+/g,' ');if(n.length<2){$('#nse').textContent='اكتب اسم صاحب الوردية (حرفين على الأقل)';return}
+if(!CS.names.includes(n))CS.names.push(n);
+const no=CS.shifts.filter(x=>x.date==td()).length+1;CS.cur={date:td(),no,owner:n};CS.shifts.push({date:td(),no,owner:n});cSv();R()}
+function cCs(){if(sess.u.role=='owner'&&CS.cur)return alert('الكاشير هو اللي يقفل الوردية من جهازه');const c=CS.cur,a=CS.ops.filter(o=>o.dt==c.date&&o.sh==c.no&&!o.void),cm=a.reduce((s2,o)=>s2+o.c,0),r=cFig(c.date),t=cStat(r)[1];
+ask(`قفل الوردية #${c.no} (${c.owner})؟`,`العمليات: ${a.length} · العمولات: ${f2(cm)} · الدرج المتوقع: ${f2(r.exp)} · ${t}`,'قفل الوردية',()=>{CS.cur=null;cSv();R()})}
+function cLq(s2){if(cRO())return;const d=document.createElement('div');d.className='ov';d.id='ov';d.innerHTML=`<div class="sheet"><div class="grab"></div><h2>${s2>0?'استلمت سيولة':'رجّعت سيولة'}</h2><small class="h">${s2>0?'الدرج هيزيد بالمبلغ ويتسجل عليك دين لصاحب الفلوس':'الدرج هينقص بالمبلغ ويتخصم من الدين'}</small><label>اسم صاحب الفلوس</label><input id="lw" list="lwl"><datalist id="lwl">${Object.keys(cOWD()).map(x=>`<option value="${x}">`).join('')}</datalist><label>المبلغ</label><input id="la" type="number" inputmode="decimal"><label>ملاحظة</label><input id="ln"><div class="er" id="le"></div><button class="pri" onclick="cSl(${s2})">حفظ</button><button class="pri dng" style="margin-top:8px" onclick="ovx()">إلغاء</button></div>`;document.body.appendChild(d);lock(1);d.onclick=e=>{if(e.target==d)ovx()}}
+function cSl(s2){const w=$('#lw').value.trim(),a=+$('#la').value,nt=$('#ln').value.trim();if(w.length<2)return $('#le').textContent='اكتب اسم صاحب الفلوس';if(!(a>0))return $('#le').textContent='اكتب مبلغ أكبر من صفر';CS.liq=CS.liq||[];
+const go=()=>{CS.liq.push({id:Date.now(),dt:td(),tm:Date.now(),who:w,a:s2*a,note:nt,sh:CS.cur?CS.cur.no:0,ow:CS.cur?CS.cur.owner:'-',us:sess.u.n});cSv();ovx();cvd=td();R()};
+if(s2<0){ovx();ask('تأكيد رجعة السيولة؟',`هتتخصم ${f2(a)} من الدرج وتتنقص من دين ${w}`,'تأكيد الرجعة',go)}else go()}
+function cVl(id){const q=CS.liq.find(x=>x.id==id);if(q)ask('إلغاء السيولة دي؟','هتتشال من الدرج والدين ومفيش تراجع','إلغاء السيولة',()=>{q.void=1;cSv();R()})}
+
+function cSh(){if(!CS)return;if(cRO())return alert('الوردية مفتوحة - وضع المشاهدة فقط');cF={t:'w',ch:'v',ci:'',man:false};const d=document.createElement('div');d.className='ov';d.id='ov';d.innerHTML=`<div class="sheet"><div class="grab"></div><h2>عملية #${cNxt(td())}</h2><div class="seg"><button id="bw" class="on" onclick="cSt('t','w')">سحب</button><button id="bt" onclick="cSt('t','t')">تحويل</button></div><label>الوسيلة</label><div class="seg"><button id="cv" class="on" onclick="cSt('ch','v')">فودافون كاش</button><button id="ci" onclick="cSt('ch','i')">انستا باي</button></div><label>المبلغ</label><input id="fa" type="number" inputmode="decimal" oninput="cFu()" autofocus><label>العمولة (تلقائي - تقدر تعدلها)</label><input id="fc" type="number" inputmode="decimal" oninput="cFm()"><label>العمولة في</label><select id="fi" onchange="cF.ci=this.value;cFh()"><option value="">افتراضي (سحب: إلكتروني / تحويل: كاش)</option><option value="d">الدرج</option><option value="t">التحويل</option></select><small class="h" id="fh"></small><label>ملاحظة / اسم العميل</label><input id="fn"><div class="er" id="fe"></div><button class="pri" onclick="cOk()">حفظ العملية</button><button class="pri dng" style="margin-top:8px" onclick="ovx()">إلغاء</button></div>`;document.body.appendChild(d);lock(1);d.onclick=e=>{if(e.target==d)ovx()}}
+function cSt(k,v){cF[k]=v;const[a,b]=k=='t'?['bw','bt']:['cv','ci'],on=k=='t'?v=='w':v=='v';$('#'+a).className=on?'on':'';$('#'+b).className=on?'':'on';cFu()}
+function cFu(){if(!cF.man){const c=cComm(cF.t,+$('#fa').value);$('#fc').value=c==null?'':c}cFh()}
+function cFm(){cF.man=$('#fc').value!=='';if(!cF.man)cFu();else cFh()}
+function cFh(){const a=+$('#fa').value,c=+$('#fc').value||0;if(!(a>0)){$('#fh').textContent='';return}const f=cFx({t:cF.t,a,c,ci:cF.ci});$('#fh').textContent=`الدرج ${f.d>=0?'+':''}${f2(f.d)} | ${cF.ch=='v'?'فودافون':'انستا'} ${f.l>=0?'+':''}${f2(f.l)}`}
+function cOk(){const a=+$('#fa').value,c=$('#fc').value;if(!(a>0))return $('#fe').textContent='اكتب مبلغ أكبر من صفر';if(c==='')return $('#fe').textContent='مفيش شريحة للمبلغ ده، اكتب العمولة بإيدك';
+const dt=td();CS.ops.push({id:Date.now(),no:cNxt(dt),dt,tm:Date.now(),sh:CS.cur?CS.cur.no:0,ow:CS.cur?CS.cur.owner:'-',us:sess.u.n,t:cF.t,ch:cF.ch,a,c:+c,ci:cF.ci,man:cF.man,note:$('#fn').value.trim()});cSv();ovx();cvd=dt;R();toast('اتحفظت العملية ✅')}
 
 /* ---------- boot ---------- */
 async function init(){
 const raw=localStorage.getItem('merp1');S=raw?JSON.parse(raw):await defS();if(!raw)save();
 applyBrand();
 const sv0=localStorage.getItem('merp-sess');if(sv0){try{const q=JSON.parse(sv0),us=S.users.find(x=>x.u==q.u);if(us&&!us.off&&us.h==q.h)sess={u:us};else localStorage.removeItem('merp-sess')}catch(e){localStorage.removeItem('merp-sess')}}
-setTimeout(R,900)}
+setTimeout(R,900);setInterval(cPull,10000)}
 init();
 </script></body></html>
