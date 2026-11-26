@@ -163,7 +163,7 @@ function addCat(){let n=0;for(const c of CAT){if(S.prods.some(p=>p.sku==c[0]))co
 save();document.querySelectorAll('.pg').forEach(x=>x.remove());R();toast('اتضاف '+n+' صنف ✅')}
 
 /* ---------- treasury & accounting helpers ---------- */
-function mig(){S.kh=S.kh||[];S.pay=S.pay||[];S.slf=S.slf||[];S.exp=S.exp||[];S.sal=S.sal||[];S.seq.kh=S.seq.kh||0}
+function mig(){S.kh=S.kh||[];S.pay=S.pay||[];S.slf=S.slf||[];S.exp=S.exp||[];S.sal=S.sal||[];S.seq.kh=S.seq.kh||0;const mp={'جاري':'تحت التنفيذ','تم':'تحت التنفيذ','مستلم':'تم التسليم'};S.maint.forEach(m=>{if(mp[m.st])m.st=mp[m.st]})}
 function khPush(o){S.kh.push({id:Date.now()+Math.random(),no:++S.seq.kh,dt:td(),tm:Date.now(),...o})}
 function khBal(){return S.kh.filter(x=>!x.void).reduce((s,x)=>s+x.io*x.amt,0)}
 
@@ -187,7 +187,7 @@ return`<div class="g2" style="margin-top:14px">
 <div class="card bigch" onclick="kSub='p';R()"><div style="font-size:36px">📦</div><h3>المنتجات</h3><small class="h">${S.prods.length} صنف · قيمة المخزون ${f2(stockVal())} ج</small></div>
 <div class="card bigch" onclick="kSub='g';R()"><div style="font-size:36px">🧮</div><h3>الجرد</h3><small class="h">رفع جرد · عدّ يدوي · تصفير الكميات</small></div>
 </div>`};
-V.h=function(){const t=td(),s0=dayS(t),st=s0.reduce((s,x)=>s+x.tot,0),pt=S.purs.filter(x=>x.dt==t).reduce((s,x)=>s+x.tot,0),mc=S.maint.filter(x=>x.st=='جاري').length;
+V.h=function(){const t=td(),s0=dayS(t),st=s0.reduce((s,x)=>s+x.tot,0),pt=S.purs.filter(x=>x.dt==t).reduce((s,x)=>s+x.tot,0),mc=S.maint.filter(x=>x.st!='تم التسليم'&&x.st!='ملغي').length;
 const act=[...S.sales.map(x=>({t:'بيع',d:`فاتورة #${x.no} · ${x.cn}`,a:x.tot,tm:x.tm,c:'t'})),...S.purs.map(x=>({t:'شراء',d:`أمر شراء #${x.no} · ${x.sn}`,a:x.tot,tm:x.tm||0,c:'w'})),...S.maint.map(x=>({t:'صيانة',d:`${x.dev} · ${x.cust}`,a:x.fee,tm:0,c:''}))].sort((a,b)=>b.tm-a.tm).slice(0,6);
 return`<div class="demo">🧪 نسخة تجريبية للتصميم — البيانات دي للعرض بس</div>
 <div class="g2">
@@ -360,19 +360,34 @@ function svC(t){const n=$('#cn2').value.trim();if(n.length<2)return toast('اك�
 save();R();toast('اتحفظ ✅')}
 
 /* ---------- maintenance ---------- */
-V.t=function(){return`<div class="bdg">تيكيتات جارية: ${S.maint.filter(x=>x.st=='جاري').length}</div>
-${S.maint.slice().sort((a,b)=>b.no-a.no).map(m=>{const pt=m.pid?pName(m.pid):'بدون قطعة';return`<div class="row"><div class="m"><b>${escQ(m.dev)} · ${escQ(m.cust)}</b><small class="h">${m.prob} · ${pt} · أجرة ${f2(m.fee)}</small></div><div style="text-align:center"><span class="stt ${m.st=='جاري'?'y':'g'}">${m.st}</span>${m.st!='مستلم'?`<br><button style="margin-top:6px;min-height:36px;padding:4px 14px;font-size:15px" onclick="adM(${m.id})">${m.st=='جاري'?'تم الإصلاح':'تسليم'}</button>`:''}</div></div>`}).join('')}
-<div class="card"><h3>تيكيت جديد</h3><label>اسم العميل</label><input id="mc"><label>الجهاز</label><input id="md" placeholder="مثال: iPhone 12"><label>العطل</label><input id="mp2">
-<label>قطعة الغيار (بتتخصم من المخزون)</label><select id="mpt"><option value="0">بدون قطعة</option>${S.prods.filter(p=>p.stock>0).map(p=>`<option value="${p.id}">${escQ(p.n)} · متاح ${p.stock}</option>`).join('')}</select>
-<label>أجرة الإصلاح</label><input id="mf" type="number" inputmode="decimal" value="0">
-<div class="er" id="me2"></div><button class="pri" onclick="svM()">حفظ التيكيت</button></div>`}
+let mF='',mQ=0;
+V.t=function(){const STS=['جديد','انتظار موافقة','تحت التنفيذ','تم التسليم'];
+const act=S.maint.filter(x=>x.st!='تم التسليم'&&x.st!='ملغي').length;
+const L=S.maint.slice().sort((a,b)=>b.no-a.no).filter(x=>!mF||x.st==mF);
+return`<div class="bdg">تيكيتات شغالة: ${act}</div>
+<div class="chps" style="margin-top:0"><button class="chp ${!mF?'on':''}" onclick="mF='';R()">الكل</button>${STS.map(s2=>`<button class="chp ${mF==s2?'on':''}" onclick="mF='${s2}';R()">${s2}</button>`).join('')}</div>
+${L.map(m=>{const pt=m.pid?pName(m.pid):'بدون قطعة';
+const a2=m.st=='جديد'?`<button style="min-height:40px;padding:6px 14px;font-size:15px" onclick="mQ=${m.id};mQSh()">تسعير</button>`:m.st=='انتظار موافقة'?`<button style="min-height:40px;padding:6px 14px;font-size:15px" onclick="mOK(${m.id})">موافقة العميل</button><button style="min-height:36px;padding:4px 12px;font-size:14px;margin-top:4px" onclick="mQ=${m.id};mQSh()">تعديل السعر</button>`:m.st=='تحت التنفيذ'?`<button style="min-height:40px;padding:6px 14px;font-size:15px" onclick="mDl(${m.id})">تم التسليم</button>`:'';
+const cn=(m.st=='جديد'||m.st=='انتظار موافقة')?`<br><button class="dng" style="min-height:32px;padding:2px 10px;font-size:14px;margin-top:4px" onclick="mCn(${m.id})">إلغاء</button>`:'';
+return`<div class="row"><div class="m"><b>${escQ(m.dev)} · ${escQ(m.cust)}</b><small class="h">${escQ(m.prob)} · ${pt}${m.fee?' · السعر '+f2(m.fee):''}</small></div><div style="text-align:center"><span class="stt ${m.st=='تم التسليم'?'g':'y'}">${m.st}</span><br>${a2}${cn}</div></div>`}).join('')||'<div class="card st n">مفيش تيكيتات</div>'}
+<div class="card"><h3>تيكيت جديد</h3><label>اسم العميل</label><input id="mc"><label>الجهاز</label><input id="md" placeholder="مثال: iPhone 12"><label>العطل</label><input id="mp2"><div class="er" id="me2"></div><button class="pri" onclick="svM()">حفظ التيكيت</button></div>`}
 function svM(){const c=$('#mc').value.trim(),dv=$('#md').value.trim();if(c.length<2||dv.length<2)return $('#me2').textContent='اكتب اسم العميل والجهاز';
-const pid=+$('#mpt').value||null;if(pid){const p=S.prods.find(x=>x.id==pid);if(p.stock<1)return $('#me2').textContent='القطعة مش متاحة في المخزون';p.stock--}
-S.maint.push({id:Date.now(),no:S.seq.m++,dt:td(),cust:c,dev:dv,prob:$('#mp2').value.trim(),pid,fee:+$('#mf').value||0,st:'جاري'});
+S.maint.push({id:Date.now(),no:S.seq.m++,dt:td(),cust:c,dev:dv,prob:$('#mp2').value.trim(),pid:null,fee:0,st:'جديد'});
 save();R();toast('اتحفظ التيكيت ✅')}
-function adM(id){const m=S.maint.find(x=>x.id==id);if(!m)return;const was=m.st;m.st=m.st=='جاري'?'تم':'مستلم';
-if(was!='مستلم'&&m.st=='مستلم'&&m.fee>0)khPush({io:1,cat:'صيانة',amt:m.fee,note:'تيكيت #'+m.no+' · '+m.dev,src:'m'+m.id});
-save();R()}
+function mQSh(){const m=S.maint.find(x=>x.id==mQ);if(!m)return;
+sh('تسعير تيكيت #'+m.no,`<label>قطعة الغيار (بتتخصم من المخزون عند موافقة العميل)</label><select id="qpt"><option value="0">بدون قطعة</option>${S.prods.filter(p=>p.stock>0).map(p=>`<option value="${p.id}" ${m.pid==p.id?'selected':''}>${escQ(p.n)} · متاح ${p.stock}</option>`).join('')}</select>
+<label>السعر المعروض على العميل</label><input id="qf" type="number" inputmode="decimal" value="${m.fee||''}">
+<div class="er" id="qe"></div><button class="pri" onclick="svQ()">حفظ السعر</button>`)}
+function svQ(){const m=S.maint.find(x=>x.id==mQ);if(!m)return;
+m.fee=+$('#qf').value||0;m.pid=+$('#qpt').value||null;m.st='انتظار موافقة';save();ovx();R();toast('اتسجل السعر - في انتظار موافقة العميل ✅')}
+function mOK(id){const m=S.maint.find(x=>x.id==id);if(!m)return;
+if(m.pid){const p=S.prods.find(x=>x.id==m.pid);if(!p||p.stock<1)return toast('القطعة مش متاحة في المخزون');p.stock--}
+m.st='تحت التنفيذ';save();R();toast('العميل وافق - التيكيت تحت التنفيذ ✅')}
+function mDl(id){const m=S.maint.find(x=>x.id==id);if(!m)return;m.st='تم التسليم';
+if(m.fee>0)khPush({io:1,cat:'صيانة',amt:m.fee,note:'تيكيت #'+m.no+' · '+m.dev,src:'m'+m.id});
+save();R();toast('اتسلّم التيكيت ✅')}
+function mCn(id){const m=S.maint.find(x=>x.id==id);if(!m)return;
+ask(`إلغاء التيكيت #${m.no}؟`,'القطعة مش هتتخصم لأن الموافقة ما تمتش','إلغاء التيكيت',()=>{m.st='ملغي';save();R();toast('اتلغى التيكيت')})}
 
 /* ---------- accounts ---------- */
 let aSub='',ajM='';
